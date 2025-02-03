@@ -1,0 +1,58 @@
+@font-face {
+    font-family: 'Vela Sans GX';
+    src: url('/fonts/VelaSans-GX.ttf') format('truetype');
+    font-weight: 300 800; /* Диапазон доступных весов */
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Gilroy';
+    src: url('/fonts/Gilroy-Medium.ttf') format('truetype');
+    font-weight: 500;
+}
+
+body {
+    background-image: url('/images/paper-bg.png'), url('/images/noisy-bg.png');
+    background-size: cover, cover; 
+    background-position: center, center; 
+    background-repeat: no-repeat, no-repeat; 
+    min-height: 100vh;
+}
+
+.container{
+    width: 1384px;
+    margin: 0 auto;
+}
+
+*::-webkit-scrollbar {
+    width: 6px;
+    background-color: transparent;
+}
+
+/* Устанавливаем цвет ползунка */
+
+*::-webkit-scrollbar-thumb {
+    background: #BE1522;
+}
+
+/* Убираем подложку для скроллбара */
+
+*::-webkit-scrollbar-track {
+    background: transparent !important;
+    border: none;
+}
+
+/* Убираем угол прокрутки, если он присутствует */
+
+*::-webkit-scrollbar-corner {
+    background: transparent !important; 
+}
+
+/* Убираем стрелки на скроллбаре */
+
+*::-webkit-scrollbar-button {
+    display: none;
+}
+
+
+
