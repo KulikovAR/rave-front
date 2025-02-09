@@ -3,7 +3,7 @@
         :class="{ new: item.new }"
     >
         <div class="catalog-item__photo">
-            <img class="catalog-item__photo-img" :src="item.media[0].path" alt="photo">
+            <img class="catalog-item__photo-img" :src="item.image" alt="photo">
             <div class="catelog-item__new-flag">
                 New
             </div>
@@ -12,31 +12,69 @@
         <div class="catalog-item__content">
             <div class="catalog-item__separator"></div>
             <div class="catalog-item__name">
-            {{ this.item.name }}
+                {{ item.name }}
             </div>
             <div class="catalog-item__price">
-                {{ this.item.price }}
+                {{ formatPrice(item.price) }} р.
             </div>
 
             <div class="catalog-item__buttons">
-                <div class="catalog-item__button cart">
+                <div class="catalog-item__button cart" @click="handleAddToCart">
                     В корзину
                 </div>
-                <div class="catalog-item__button">
+                <div class="catalog-item__button" @click="goToProduct(item.slug)">
                     Подробнее
                 </div>
             </div>
         </div>
-        
-        
     </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
     name: 'RecommendedProductsItem',
     props: {
         item: Object,
+        restaurantSlug: String,
+        categorySlug: String,
+    },
+    methods: {
+        ...mapActions("cart", ["addToCart"]),
+
+        goToProduct(productSlug) {
+            this.$router.push({ 
+                name: 'product', 
+                params: { 
+                    restaurantSlug: this.restaurantSlug, 
+                    categorySlug: this.categorySlug, 
+                    productSlug 
+                } 
+            });
+        },
+
+        handleAddToCart() {
+            const restaurantId = this.restaurantSlug;
+
+            const cartItem = {
+                id: this.item.id,
+                name: this.item.name,
+                price: this.item.price,
+                quantity: 1,  // Добавляем 1 товар по умолчанию
+                image: this.item.image || '',
+                calories: this.item.calories,
+                weight: this.item.weight,
+                recommended_products: this.item.recommended_products
+            };
+
+            this.addToCart({ restaurantId, item: cartItem });
+            this.$emit('itemAddedToCart');
+        },
+
+        formatPrice(price) {
+            return Math.floor(parseFloat(price));
+        },
     }
 }
 </script>
@@ -52,6 +90,7 @@ export default {
 
         border-right: 1px solid #9E9E9E;
         border-bottom: 1px solid #9E9E9E;
+        border-top: 1px solid #9E9E9E;
     }
 
     .catalog-item::after {
@@ -208,5 +247,39 @@ export default {
         color: #FFFFFF;
         background: var(--Btn-Hover-Red, #BE1522);
         border: 1px solid var(--Btn-Hover-Red, #BE1522)
+    }
+</style>
+
+<style scoped>
+
+    @media (max-width: 500px){
+        .catalog-item{
+            width: 100%;
+            height: 389px;
+            border: 1px solid #9E9E9E;
+        }
+        .catalog-item__price{
+            font-family: Vela Sans GX;
+            font-size: 16px;
+            font-weight: 800;
+            line-height: 16px;
+            letter-spacing: -0.03em;
+            text-align: center;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+        }
+        .catalog-item__buttons{
+            gap: 6px;
+        }
+        .catalog-item__button{
+            height: 37px;
+            font-family: Vela Sans GX;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 17.4px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+        }
     }
 </style>

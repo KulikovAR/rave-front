@@ -1,5 +1,10 @@
 <template>
-    <div class="main-page">
+    <div class="main-page"
+        :class="{ 
+            twin: restaurants.length == 2,
+            solo: restaurants.length == 1,
+        }"
+    >
         <MainHeader 
             ref="MainHeader"
             @showDeliveryPopUp="showDeliveryPopUp"
@@ -10,23 +15,27 @@
         />
         <SchedulePopUp
             ref="SchedulePopUp"
+            :restaurants="restaurants"
+        />
+        <MainBannerPopUp
+            :banner="bannerWithImagePath"
         />
         <div class="restaurants__list">
             <div
                 v-for="(item, index) in restaurants"
                 :key="index"
                 class="restaurant__item"
-                :style="{ backgroundImage: `url('/images/restaurants/paper.png'), url('${item.background_image}')` }"
+                :style="{ backgroundImage: `url('/images/restaurants/paper.png'), url('${getFullImagePath(item.background_image)}')` }"
             >
                 <div class="restaurant__noise"></div>
                 <div class="restaurant__item__logo">
-                    <img class="restaurant__item__logo-img" :src="item.photo" alt="">
-                    <div class="restaurant__item__description">
-                        {{item.description}}
-                    </div>
-                    <div class="restaurant__item__btn btn">
-                        Перейти меню
-                    </div>
+                    <img class="restaurant__item__logo-img" :src="getFullImagePath(item.photo)">
+                </div>
+                <div class="restaurant__item__description">
+                    {{ item.description }}
+                </div>
+                <div class="restaurant__item__btn btn" @click="goToRestaurant(item.slug)">
+                    Перейти меню
                 </div>
             </div>
         </div>
@@ -37,52 +46,64 @@
 import MainHeader from '../components/MainHeader.vue';
 import DeliveryPopUp from '../components/DeliveryPopUp.vue';
 import SchedulePopUp from '../components/SchedulePopUp.vue';
+import MainBannerPopUp from '../components/MainBannerPopUp.vue';
+import { mapState, mapActions } from 'vuex';
+
+const BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
+
 export default {
     name: 'MainPage',
     components: {
         MainHeader,
         DeliveryPopUp,
-        SchedulePopUp
+        SchedulePopUp,
+        MainBannerPopUp
     },
-    data(){
-        return{
-            restaurants: [
-                {
-                    name: 'rave-sushi',
-                    description: 'погрузись в Мир \n японской кухни!\n Премиум роллы и суши',
-                    photo: '/images/restaurants/logo-1.png',
-                    background_image: '/images/restaurants/bg-item-1.jpg',
-                },
-                {
-                    name: 'rave-bistro',
-                    description: 'Авторская шаурма, \n хот-доги и сендвичи \n в поп-арт стиле',
-                    photo: '/images/restaurants/logo-2.png',
-                    background_image: '/images/restaurants/bg-item-2.jpg',
-                },
-                {
-                    name: 'rave-burger',
-                    description: 'Авторскаие бургеры,\n традиционный вок в атмосфере \n индустриального лофта',
-                    photo: '/images/restaurants/logo-3.png',
-                    background_image: '/images/restaurants/bg-item-3.jpg',
-                }
-            ]
+    computed: {
+        ...mapState('restaurant', ['restaurants', 'banner']),
+        
+        // Вычисляемое свойство для баннера
+        bannerWithImagePath() {
+            if (this.banner && this.banner.image_path) {
+                return {
+                    ...this.banner,
+                    image_path: this.getFullImagePath(this.banner.image_path)
+                };
+            }
+            return this.banner;
         }
     },
     methods: {
-        showDeliveryPopUp(){
+        ...mapActions('restaurant', ['fetchRestaurants', 'fetchBanner']),
+        showDeliveryPopUp() {
             this.$refs.DeliveryPopUp.showPopUp();
         },
-        showSchedulePopUp(){
+        showSchedulePopUp() {
             this.$refs.SchedulePopUp.showPopUp();
+        },
+        goToRestaurant(restaurantSlug) {
+            this.$router.push({ name: 'categories', params: { restaurantSlug } });
+        },
+        getFullImagePath(imageName) {
+            return `${BASE_URL}${imageName}`;
+        },
+    },
+    mounted() {
+        if (!this.restaurants.length) {
+            this.fetchRestaurants(); // Загружаем рестораны из Vuex, если они ещё не загружены
+        }
+        if (!this.banner) {
+            this.fetchBanner(); // Загружаем баннер, если его нет
         }
     }
-}
+};
 </script>
 
 <style scoped>
     .main-page{
-        width: 100vw;
+        /* width: 100vw; */
         height: 100vh;
+        min-height: 100vh;
     }
     .restaurants__list{
         width: 100%;
@@ -90,6 +111,7 @@ export default {
         display: flex;
     }
     .restaurant__item {
+        position: relative;
         background-size: cover, cover; 
         background-position: center, center; 
         background-repeat: no-repeat, no-repeat; 
@@ -109,8 +131,46 @@ export default {
         transition: filter 0.3s ease-in-out;
     }
 
+    .main-page.twin .restaurant__item{
+        width: 50%;
+    }
+
+    .main-page.solo .restaurant__item{
+        width: 100%;
+    }
+
+
+    .restaurant__item::after{
+            content: '';
+            background-color: #000000;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            opacity: 0.5;
+            z-index: 1;
+        }
+
+        .restaurant__item__logo{
+            z-index: 2;
+        }
+        .restaurant__item__description{
+            z-index: 2;
+        }
+        .restaurant__item__btn{
+            z-index: 2;
+        }
+
+
     .restaurant__item:hover {
         filter: grayscale(0%);
+    }
+
+    .restaurant__item:hover .restaurant__item__logo{
+        opacity: 1;
     }
 
     .restaurant__item__logo {
@@ -119,12 +179,16 @@ export default {
         align-items: center;
         justify-content: center;
         gap: 16px;
+        background: #fff;
+        border-radius: 4px;
+        opacity: 0.5;
     }
 
     .restaurant__item__logo-img {
         width: 150px;
         height: 150px;
         transition: 0.3s ease;
+        border-radius: 4px;
     }
 
     .restaurant__item:hover .restaurant__item__logo-img{
@@ -133,6 +197,7 @@ export default {
     } 
 
     .restaurant__item__description {
+        max-width: 311px;
         font-size: 18px;
         font-weight: 500;
         color: white;
@@ -188,5 +253,115 @@ export default {
         opacity: 0.2;
         mix-blend-mode: overlay;
         pointer-events: none; 
+    }
+</style>
+
+<style scoped>
+    @media (max-width: 1000px){
+        .main-page{
+            height: auto;
+
+            background-image: url('/images/restaurants/paper.png');
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat; 
+            background-color: var(--Btn-Black, #000000);
+        }
+        .restaurants__list{
+            flex-direction: column;
+            padding: 113px 28px 28px 28px;
+        }
+        .restaurant__item{
+            height: 33%;
+            width: 100%;
+            background-size: cover, cover;
+            padding: 63px;
+        }
+        .main-page.twin .restaurant__item{
+            width: 100%;
+            height: 33%;
+        }
+        .main-page.solo .restaurant__item{
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    @media (max-width: 768px){
+        .restaurant__item{
+            filter: none;
+            padding: 42px;
+        }
+        .restaurant__item:hover {
+            filter: none;
+        } 
+        .restaurants__list{
+            padding: 82px 16px 16px 16px;
+        }
+
+        .restaurant__item{
+            position: relative;
+        }
+
+        .restaurant__item::after{
+            content: '';
+            background-color: #000000;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            opacity: 0.65;
+            z-index: 1;
+        }
+
+        .restaurant__item__logo{
+            z-index: 2;
+            opacity: 1;
+        }
+        .restaurant__item__description{
+            z-index: 2;
+        }
+        .restaurant__item__btn{
+            z-index: 2;
+        }
+    }
+
+    @media (max-width: 500px){
+        .restaurant__item{
+            gap: 14px;
+        }
+        .restaurant__item__logo-img{
+            width: 76px;
+            height: 76px;
+        }
+        .restaurant__item:hover .restaurant__item__logo-img{
+            width: 96px;
+            height: 96px;
+        } 
+        .restaurant__item__description{
+            max-width: 228px;
+            font-family: Vela Sans GX;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 14.16px;
+            letter-spacing: -0.05em;
+            text-align: center;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+        }
+        .restaurant__item__btn{
+            height: 36px;
+            width: 110px;
+            font-family: Vela Sans GX;
+            font-size: 10.24px;
+            font-weight: 600;
+            line-height: 14.84px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+        }
     }
 </style>

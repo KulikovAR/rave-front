@@ -3,33 +3,33 @@
         <div class="container">
             <div class="product-item">
                 <div class="product-item__photo">
-                    <img class="product-item__photo-img" src="/images/restaurants/products/1.png" alt="">
+                    <img class="product-item__photo-img" :src="product.image" alt="">
                 </div>
                 <div class="product-item__content">
                     <div class="product-item__content__name">
-                        {{this.product.name}}
+                        {{ product.name }}
                     </div>
                     <div class="product-item__content__energy-value">
-                        {{this.product.calories}} Ккал ,{{this.product.weight}} г.
+                        {{ product.calories }} Ккал, {{ product.weight }} г.
                     </div>
                     <div class="product-item__content__description">
-                        {{this.product.description}}
+                        {{ product.description }}
                     </div>
                     <div class="product-item__content__price">
-                        {{this.product.price}} р.
+                        {{ formatPrice(product.price) }} р.
                     </div>
                     <div class="product-item__content__buttons">
                         <div class="product-item__quantity">
-                            <div class="product-item__quantity-button minus">
-                                 -
+                            <div class="product-item__quantity-button minus" @click="decreaseQuantity">
+                                -
                             </div>
-                            <input class="product-item__quantity-input" type="number" value="3" step="1">
-                            <div class="product-item__quantity-button plus">
+                            <input class="product-item__quantity-input" type="number" v-model="quantity" min="1">
+                            <div class="product-item__quantity-button plus" @click="increaseQuantity">
                                 +
                             </div>
                         </div>
 
-                        <div class="product-item__content__button cart">
+                        <div class="product-item__content__button cart" @click="handleAddToCart">
                             В корзину
                         </div>
                     </div>
@@ -40,18 +40,65 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
     name: 'ProductItem',
     props: {
-        product: Object
+        product: Object, // Пропс для передачи данных о продукте
+        restaurantSlug: String
+    },
+    data() {
+        return {
+            quantity: 1  // Количество по умолчанию
+        };
+    },
+    methods: {
+        ...mapActions("cart", ["addToCart"]),  // Vuex экшен для добавления в корзину
+
+        increaseQuantity() {
+            this.quantity++;
+        },
+        decreaseQuantity() {
+            if (this.quantity > 1) {
+                this.quantity--;
+            }
+        },
+        handleAddToCart() {
+            const restaurantId = this.restaurantSlug;
+
+            const cartItem = {
+                id: this.product.id,
+                name: this.product.name,
+                price: this.product.price,
+                quantity: this.quantity,
+                image: this.product.image,
+                calories: this.product.calories,
+                weight: this.product.weight,
+                recommended_products: this.product.recommended_products
+            };
+
+            this.addToCart({ restaurantId, item: cartItem });
+
+            this.quantity = 1; // Сбрасываем количество после добавления
+        },
+        formatPrice(price) {
+            return Math.floor(parseFloat(price));
+        },
+
+        // Метод для формирования полного пути к изображению
+        getFullImagePath(imageName) {
+            return `https://rave-back.pisateli-studio.ru/storage/${imageName}`;
+        }
     }
-}
+};
 </script>
 
 <style scoped>
     .product-item{
         display: flex;
-        align-items: center;
+        /* align-items: center; */
+        align-items: self-end;
         border: 1px solid var(--Color-Gray, #9E9E9E);
         margin-bottom: 24px;
     }
@@ -150,7 +197,7 @@ export default {
     }
     .product-item__quantity *{
         width: 33%;
-        height: 48px;
+        height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -215,5 +262,102 @@ export default {
         color: #FFFFFF;
         background: var(--Btn-Hover-Red, #BE1522);
         border: 1px solid var(--Btn-Hover-Red, #BE1522)
+    }
+</style>
+
+<style scoped>
+    @media (max-width: 1100px){
+        .product-item{
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .product-item__photo{
+            width: 100%;
+            height: 100%;
+        }
+
+        .product-item__photo-img{
+            width: auto;
+            height: auto;
+            max-height: 350px;
+        }
+
+        .product-item__content{
+            width: 100%;
+            padding: 24px;
+        }
+    }
+
+    @media (max-width: 768px){
+        .product-item{
+            margin-bottom: 42px;
+        }
+        .product-item__content{
+            padding: 24px 12px 12px;
+        }
+
+        .product-item__content__name{
+            max-width: 60%;
+            font-family: Vela Sans GX;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 21.6px;
+            letter-spacing: -0.02em;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            margin-bottom: 12px;
+        }
+
+        .product-item__content__energy-value{
+            font-family: Vela Sans GX;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 16.8px;
+            letter-spacing: -0.03em;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            margin-bottom: 16px;
+        }
+
+        .product-item__content__description{
+            font-family: Vela Sans GX;
+            font-size: 14px;
+            font-weight: 300;
+            line-height: 18.34px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            margin-bottom: 16px;
+        }
+
+        .product-item__content__price{
+            font-family: Vela Sans GX;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 24px;
+            letter-spacing: -0.03em;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            margin-bottom: 16px;
+        }
+
+        .product-item__content__buttons{
+            width: 100%;
+            gap: 16px;
+        }
+
+        .product-item__quantity{
+            width: 125px;
+            height: 48px;
+            margin-right: 0;
+        }
+
+        .product-item__content__button.cart{
+            width: 100%;
+            max-width: 180px;
+        }
     }
 </style>

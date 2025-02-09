@@ -2,9 +2,7 @@
     <div class="not-found-page page">
         <Header
             @showContactsPopUp="showContactsPopUp"
-        />
-        <ContactsPopUp
-            ref="ContactsPopUp"
+            
         />
         <NotFoundContent/>
     </div>
@@ -42,5 +40,14 @@ export default {
         padding-top: calc(65px + 2 * 24px);
         padding-bottom: calc(65px + 2 * 24px);
         height: 100vh;
+    }
+</style>
+
+<style scoped>
+    @media (max-width: 768px){
+        .not-found-page{
+            padding-top: calc(48px + 18px* 2);
+            padding-bottom: 22px;
+        }
     }
 </style>

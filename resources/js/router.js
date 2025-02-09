@@ -15,12 +15,26 @@ import NotFoundPage from './pages/NotFoundPage.vue'
 
 const routes = [
   { path: '/', name: 'main', component: MainPage },
-  { path: '/categories', name: 'categories', component: CategoryPage },
-  { path: '/catalog', name: 'catalog', component: CatalogPage },
-  { path: '/product', name: 'product', component: ProductPage },
-  { path: '/cart', name: 'cart', component: CartPage },
-  { path: '/order', name: 'order', component: OrderPage },
+  { path: '/:restaurantSlug/categories', name: 'categories', component: CategoryPage },
+  { path: '/:restaurantSlug/catalog/:categorySlug', name: 'catalog', component: CatalogPage },
+  {
+    path: '/:restaurantSlug/catalog/new',
+    name: 'newCatalog',
+    component: CatalogPage,
+    props: { categorySlug: 'new' },
+  },
+  { path: '/:restaurantSlug/:categorySlug/product/:productSlug', name: 'product', component: ProductPage },
+  { path: '/:restaurantSlug/cart', name: 'cart', component: CartPage },
+  { path: '/:restaurantSlug/order', name: 'order', component: OrderPage },
   { path: '/404', name: '404', component: NotFoundPage },
+
+  
+  
+  // Обработчик для всех неизвестных маршрутов (добавлен * wildcard)
+  {
+    path: '/:catchAll(.*)', // Этот путь теперь перехватывает все несуществующие маршруты
+    redirect: '/404' // Перенаправляем на страницу 404
+  }
 ]
 
 export default createRouter({

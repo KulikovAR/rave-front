@@ -8,9 +8,9 @@
                 <div class="not-found__content__text">
                     Страница не найдена
                 </div>
-                <div class="not-found__content__button">
+                <router-link :to="{ name: 'main' }"  class="not-found__content__button">
                     На главную
-                </div>
+                </router-link>
             </div>
         </div>
     </div>
@@ -101,5 +101,26 @@ export default {
         color: #FFFFFF;
         background: var(--Btn-Hover-Red, #BE1522);
         border: 1px solid var(--Btn-Hover-Red, #BE1522);
+    }
+</style>
+
+<style scoped>
+    @media (max-width: 768px){
+        .not-found__content__title{
+            font-family: Montserrat;
+            font-size: 100px;
+            font-weight: 800;
+            line-height: 110px;
+            letter-spacing: 1px;
+            text-align: center;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            margin-bottom: 10px;
+            -webkit-text-stroke: 1px var(--Btn-Black, #000000); 
+        }
+        .not-found__content__text{
+            line-height: 20px;
+            margin-bottom: 24px;
+        }
     }
 </style>

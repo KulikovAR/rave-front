@@ -2,22 +2,41 @@
     <div class="product-page page">
         <Header
             @showContactsPopUp="showContactsPopUp"
+            :restaurantSlug="restaurantSlug"
         />
         <ContactsPopUp
             ref="ContactsPopUp"
+            :restaurantSlug="restaurantSlug"
         />
-        <BreadCrumbs :links="this.breadCrumbs" />
-        <ProductItem :product="this.product"/>
-        <RecommendedProductsSlider/>
+        <BreadCrumbs :links="breadCrumbs" />
+        <ProductItem 
+            ref="ProductItem"
+            :restaurantSlug="restaurantSlug"
+            :product="product"  
+        />
+        <RecommendedProductsSlider 
+            ref="RecommendedProductsSlider"
+            :restaurantSlug="restaurantSlug"
+            :categorySlug="categorySlug"
+            :products="product.recommended_products"
+        />
+        <NotWorkingTimePopUp
+            :restaurantSlug="restaurantSlug"
+        />
     </div>
 </template>
 
 <script>
+import { mapState, mapGetters, mapActions } from 'vuex';
 import Header from '../components/Header.vue';
 import ContactsPopUp from '../components/ContactsPopUp.vue';
 import BreadCrumbs from '../components/BreadCrumbs.vue';
 import ProductItem from '../components/ProductItem.vue';
 import RecommendedProductsSlider from '../components/RecommendedProductsSlider.vue';
+import NotWorkingTimePopUp from '../components/NotWorkingTimePopUp.vue';
+
+const BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
+
 export default {
     name: 'ProductPage',
     components: {
@@ -25,65 +44,136 @@ export default {
         ContactsPopUp,
         BreadCrumbs,
         ProductItem,
-        RecommendedProductsSlider
+        RecommendedProductsSlider,
+        NotWorkingTimePopUp,
     },
-    data(){
-        return{
-            categories: [],
+    data() {
+        return {
+            restaurantSlug: this.$route.params.restaurantSlug,
+            categorySlug: this.$route.params.categorySlug,
+            productSlug: this.$route.params.productSlug,
             breadCrumbs: [],
-            product: {}
+            product: {},  // Данные о продукте
+        };
+    },
+    computed: {
+        ...mapState('restaurant', ['products']),
+        ...mapGetters('restaurant', ['getProductBySlug']),
+        
+        // Получаем продукт из геттера
+        productData() {
+            const product = this.getProductBySlug(this.productSlug);
+            console.log('productData computed:', product); // Логирование
+            return product;
         }
+    },
+    watch: {
+        // Слежение за изменением slug продукта и загрузка данных, если они изменяются
+        '$route.params.productSlug': 'loadProductData'
     },
     methods: {
-        showContactsPopUp(){
+        ...mapActions('restaurant', ['fetchProducts']),
+        
+        showContactsPopUp() {
             this.$refs.ContactsPopUp.showPopUp();
         },
-        initData(){
-            this.product = {
-                name: '',
-                id: "9e154f88-e460-4086-8e08-141d74786295",
-                category_id: "9e154f65-2a5c-487d-957e-e8e8b7b0e372",
-                name: "Шаурма кебаб гуакамоле",
-                description: "Лаваш, кебаб свино-говяжий, тар тар из томатов и красного лука, гуакамоле, соус белый, свежий шпинат, томат, красный лук, сыр чеддер, омлет",
-                price: "390.00",
-                weight: 350,
-                calories: 890,
-                hidden: 0,
-                new: 1,
-                priority: 1,
-                created_at: "2025-01-29T09:40:58.000000Z",
-                updated_at: "2025-01-31T10:45:20.000000Z",
-                media: [
+
+        // Получаем полный путь к изображению
+        getFullImagePath(imageName) {
+            return `${BASE_URL}${imageName}`;
+        },
+
+        initBreadCrumbs() {
+            if (this.product) {
+                this.breadCrumbs = [
                     {
-                        "id": "9e154f88-e8a1-4de6-84bc-64abff81b421",
-                        "product_id": "9e154f88-e460-4086-8e08-141d74786295",
-                        "path": "01JJRPYWQ63005FHZE7E21S1H5.jpg",
-                        "created_at": "2025-01-29T09:40:58.000000Z",
-                        "updated_at": "2025-01-29T09:40:58.000000Z"
+                        textname: 'Каталог',
+                        name: 'catalog',
+                        params: {
+                            restaurantSlug: this.restaurantSlug,
+                            categorySlug: this.categorySlug
+                        }
+                    },
+                    {
+                        textname: this.product.name,
+                        name: 'product',
+                        params: {
+                            restaurantSlug: this.restaurantSlug,
+                            categorySlug: this.categorySlug,
+                            productSlug: this.productSlug
+                        }
                     }
-                ]
-            };
-            this.breadCrumbs = [
-                {
-                    name: 'Каталог',
-                    path: '/catalog',
-                },
-                {
-                    name: 'Шаурма кебаб гуакамоле',
-                    path: '/product'
-                }
-            ];
+                ];
+            }
+        },
+
+        // Загружаем продукт, если его нет в хранилище
+        loadProductData() {
+            if (!this.productData) {
+                console.log('Продукт не найден в хранилище, загружаем...');
+                this.$store.dispatch('restaurant/fetchProducts')
+                    .then(() => {
+                        const loadedProduct = this.productData;
+                        if (loadedProduct) {
+                            this.product = {
+                                ...loadedProduct,
+                                image: this.getFullImagePath(loadedProduct.media[0].path),
+                                recommended_products: loadedProduct.recommended_products.map(product => ({
+                                    ...product,
+                                    image: product.media?.[0]?.path ? this.getFullImagePath(product.media[0].path) : null
+                                }))
+                            };
+                            this.initBreadCrumbs();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка при загрузке продукта:', error);
+                    });
+            } else {
+                // Если продукт уже найден, просто инициализируем breadcrumbs
+                this.product = {
+                    ...this.productData,
+                    image: this.getFullImagePath(this.productData.media[0].path),
+                    recommended_products: this.productData.recommended_products.map(product => ({
+                        ...product,
+                        image: product.media?.[0]?.path ? this.getFullImagePath(product.media[0].path) : null
+                    }))
+                };
+                this.initBreadCrumbs();
+            }
         }
     },
-    mounted(){
-        this.initData();
+    mounted() {
+        // При загрузке страницы проверяем, есть ли данные о продукте в хранилище
+        if (this.products.length === 0) {
+            console.log('Продукты не загружены, загружаем...');
+            this.$store.dispatch('restaurant/fetchProducts')
+                .then(() => {
+                    this.loadProductData();  // После загрузки данных, загружаем продукт
+                })
+                .catch(error => {
+                    console.error('Ошибка при загрузке продуктов:', error);
+                });
+        } else {
+            // Если продукты уже загружены, сразу пытаемся найти продукт
+            this.loadProductData();
+        }
     }
-}
+};
 </script>
 
 <style scoped>
     .product-page{
         padding-top: calc(65px + 2 * 24px);
         padding-bottom: calc(65px + 2 * 24px);
+    }
+</style>
+
+<style scoped>
+    @media (max-width: 768px){
+        .product-page{
+            padding-top: calc(48px + 18px * 2);
+            padding-bottom: 22px;
+        }
     }
 </style>

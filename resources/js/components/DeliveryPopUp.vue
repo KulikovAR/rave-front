@@ -55,9 +55,11 @@ export default {
     methods: {
         closePopUp(){
             document.querySelector('.delivery__pop-up').style.display = "none";
+            document.body.style.overflow = 'auto';
         },
         showPopUp(){
             document.querySelector('.delivery__pop-up').style.display = "block";
+            document.body.style.overflow = 'hidden';
         },
     },
     data(){
@@ -112,6 +114,8 @@ export default {
         background-size: cover, cover; 
         background-position: center, center; 
         background-repeat: no-repeat, no-repeat; 
+
+        overflow-y: scroll;
     }
     .delivery__pop-up__bg{
         position: absolute;
@@ -200,5 +204,85 @@ export default {
     span.red-text{
         font-family: Vela Sans GX;
         color: #BE1522;
+        white-space: nowrap;
+    }
+
+    .delivery__pop-up__footer span.red-text{
+        font-family: Vela Sans GX;
+        color: #BE1522;
+        white-space: wrap;
+    }
+</style>
+
+<style scoped>
+    @media(max-width: 1214px){
+        .delivery__pop-up__content,
+        .delivery__pop-up__footer {
+            padding: 0 40px;
+        }
+    }
+
+    @media(max-width: 914px){
+        .delivery__pop-up__content,
+        .delivery__pop-up__footer {
+            padding: 0 20px;
+        }
+    }
+
+    @media (max-width: 768px){
+        .delivery__pop-up__frame{
+            padding: 24px 12px;
+            margin: 18px 16px 26px;
+            width: calc(100% - 16px* 2);
+            height: calc(100% - 18px - 26px);
+            height: fit-content;
+            max-height: calc(100% - 18px - 26px);
+        }
+        .delivery__pop-up__header{
+            height: 33px;
+            margin-bottom: 56px;
+        }
+        .delivery__pop-up__content{
+            margin-bottom: 56px;
+            padding: 0;
+        }
+        .delivery__pop-up__content-title{
+            font-family: Vela Sans GX;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 26.1px;
+            letter-spacing: -0.05em;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            margin-bottom: 24px;
+        }
+        .delivery__pop-up__content-item{
+            font-family: Vela Sans GX;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20.3px;
+            letter-spacing: -0.05em;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+        }
+        .delivery__pop-up__content-item+.delivery__pop-up__content-item{
+            margin-top: 24px;
+        }
+        .delivery__pop-up__footer{
+            margin-bottom: 0;
+            padding: 0;
+        }
+        .delivery__pop-up__footer .delivery__pop-up__content-item{
+            font-family: Vela Sans GX;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20.3px;
+            letter-spacing: -0.05em;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+        }
     }
 </style>

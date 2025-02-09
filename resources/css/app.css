@@ -20,7 +20,7 @@ body {
 }
 
 .container{
-    width: 1384px;
+    max-width: 1384px;
     margin: 0 auto;
 }
 
@@ -51,4 +51,14 @@ body {
     display: none;
 }
 
+@media (max-width: 1394px) {
+    .container{
+        padding: 0 28px;
+    }
+}
 
+@media (max-width: 768px){
+    .container{
+        padding: 0 16px;
+    }
+}

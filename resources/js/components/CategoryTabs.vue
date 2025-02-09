@@ -2,85 +2,222 @@
     <div class="category-tabs">
         <div class="container">
             <div class="category-tabs__wrapper">
-
-                <!-- Логотип остается на месте -->
-                <div class="current-restaurant__logo">
-                    <img class="current-restaurant__logo-img" src="/images/restaurants/logo-3.png" alt="">
+                <!-- Логотип ресторана -->
+                <div class="current-restaurant__logo" ref="logo">
+                    <img 
+                        class="current-restaurant__logo-img" 
+                        :src="currentRestaurantLogo" 
+                        :alt="currentRestaurantName"
+                    >
                 </div>
 
-                <!-- Вся обводка теперь статична, а внутренняя часть скроллится -->
-                <div class="category-tabs__list-wrapper">
+                <!-- Список категорий с горизонтальной прокруткой -->
+                <div class="category-tabs__list-wrapper" ref="listWrapper">
                     <div class="category-tabs__list" ref="scrollContainer">
-                        <div class="category-tabs__item new">New</div>
-                        <div class="category-tabs__item current">категории</div>
-                        <div class="category-tabs__item">Шаурма</div>
-                        <div class="category-tabs__item">Хот-доги</div>
-                        <div class="category-tabs__item">Сендвичи</div>
-                        <div class="category-tabs__item new">New</div>
-                        <div class="category-tabs__item">Бургеры</div>
-                        <div class="category-tabs__item">Стритфуд</div>
-                        <div class="category-tabs__item">Напитки</div>
-                        <div class="category-tabs__item">Десерты</div>
-                        <div class="category-tabs__item new">New</div>
-                        <div class="category-tabs__item current">категории</div>
-                        <div class="category-tabs__item">Шаурма</div>
-                        <div class="category-tabs__item">Хот-доги</div>
-                        <div class="category-tabs__item">Сендвичи</div>
-                        <div class="category-tabs__item new">New</div>
-                        <div class="category-tabs__item">Бургеры</div>
-                        <div class="category-tabs__item">Стритфуд</div>
-                        <div class="category-tabs__item">Напитки</div>
-                        <div class="category-tabs__item">Десерты</div>
+                        <div 
+                            v-if="hasNewItems"
+                            class="category-tabs__item new"
+                            :class="{ 'current': isActiveTab('new') }"
+                            @click="goToCatalog('new')"
+                        >
+                            New
+                        </div>
+
+                        <div 
+                            class="category-tabs__item"
+                            :class="{ 'current': isActiveTab('categories') }"
+                            @click="goToCategories"
+                        >
+                            Категории
+                        </div>
+
+                        <div 
+                            v-for="(item, index) in categories"
+                            :key="index"
+                            class="category-tabs__item"
+                            :class="{ 'current': isActiveTab(item.slug) }"
+                            @click="goToCatalog(item.slug)"
+                        >
+                            {{ item.name }}
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { useStore } from "vuex";
+import { useRoute, useRouter } from "vue-router";
+
 export default {
-    name: 'CategoryTabs',
-    mounted() {
-        const slider = this.$refs.scrollContainer;
-        let isDown = false;
-        let startX;
-        let scrollLeft;
+    name: "CategoryTabs",
+    props: {
+        restaurantSlug: String,
+        categorySlug: String,
+    },
+    setup(props) {
+        const store = useStore();
+        const route = useRoute();
+        const router = useRouter();
 
-        // Перетаскивание мышью
-        slider.addEventListener('mousedown', (e) => {
-            isDown = true;
-            startX = e.pageX - slider.offsetLeft;
-            scrollLeft = slider.scrollLeft;
+        // Получение данных из Vuex
+        const categories = computed(() => {
+            const currentRestaurant = store.state.restaurant.restaurants.find(r => r.slug === props.restaurantSlug);
+            if (!currentRestaurant) return [];
+            
+            return store.state.restaurant.categories.filter(category => category.restaurant_id === currentRestaurant.id);
+        });
+
+        const hasNewItems = computed(() => {
+            // Находим текущий ресторан
+            const currentRestaurant = store.state.restaurant.restaurants.find(r => r.slug === props.restaurantSlug);
+            if (!currentRestaurant) return false;
+
+            // Фильтруем категории, принадлежащие текущему ресторану
+            const restaurantCategories = store.state.restaurant.categories
+                .filter(category => category.restaurant_id === currentRestaurant.id)
+                .map(category => category.id); // Берём только ID категорий
+
+            // Проверяем, есть ли новые продукты в этих категориях
+            return store.state.restaurant.products.some(product =>
+                product.new === 1 && restaurantCategories.includes(product.category_id)
+            );
+        });
+
+        const currentRestaurant = computed(() => 
+            store.state.restaurant.restaurants.find(r => r.slug === props.restaurantSlug) || {}
+        );
+
+        const currentRestaurantLogo = computed(() =>
+            currentRestaurant.value.photo
+                ? `https://rave-back.pisateli-studio.ru/storage/${currentRestaurant.value.photo}`
+                : ""
+        );
+
+        const currentRestaurantName = computed(() => currentRestaurant.value.name || "");
+
+        const currentTab = computed(() => props.categorySlug || "categories");
+        const isActiveTab = (tabSlug) => {
+            return currentTab.value === tabSlug;
+        };
+
+        // Методы навигации
+        const goToCatalog = (categorySlug) => {
+            router.push({ 
+                name: categorySlug === "new" ? "newCatalog" : "catalog",
+                params: { restaurantSlug: props.restaurantSlug, categorySlug },
+            });
+        };
+
+        const goToCategories = () => {
+            router.push({ name: "categories", params: { restaurantSlug: props.restaurantSlug } });
+        };
+
+        // DOM-рефы
+        const listWrapper = ref(null);
+        const logo = ref(null);
+        const scrollContainer = ref(null);
+
+        // Обработчик прокрутки окна
+        const handleScroll = () => {
+            if (listWrapper.value && logo.value) {
+                const background = window.scrollY > 10 ? "#FFFFFC" : "transparent";
+                listWrapper.value.style.background = background;
+                logo.value.style.background = background;
+            }
+        };
+
+        // Горизонтальная прокрутка мышью и перетаскивание
+        const handleMouseDown = (e) => {
+            const slider = scrollContainer.value;
+            if (!slider) return;
+
+            slider.isDown = true;
+            slider.startX = e.pageX - slider.offsetLeft;
+            slider.scrollLeftStart = slider.scrollLeft;
             slider.style.cursor = "grabbing";
-        });
+        };
 
-        slider.addEventListener('mouseleave', () => {
-            isDown = false;
+        const handleMouseLeave = () => {
+            const slider = scrollContainer.value;
+            if (!slider) return;
+
+            slider.isDown = false;
             slider.style.cursor = "grab";
-        });
+        };
 
-        slider.addEventListener('mouseup', () => {
-            isDown = false;
+        const handleMouseUp = () => {
+            const slider = scrollContainer.value;
+            if (!slider) return;
+
+            slider.isDown = false;
             slider.style.cursor = "grab";
-        });
+        };
 
-        slider.addEventListener('mousemove', (e) => {
-            if (!isDown) return;
+        const handleMouseMove = (e) => {
+            const slider = scrollContainer.value;
+            if (!slider || !slider.isDown) return;
+
             e.preventDefault();
             const x = e.pageX - slider.offsetLeft;
-            const walk = (x - startX); // Ускоряем движение
-            slider.scrollLeft = scrollLeft - walk;
+            const walk = x - slider.startX;
+            slider.scrollLeft = slider.scrollLeftStart - walk;
+        };
+
+        const handleWheelScroll = (e) => {
+            const slider = scrollContainer.value;
+            if (!slider) return;
+
+            e.preventDefault();
+            slider.scrollLeft += e.deltaY * 0.2;
+        };
+
+        onMounted(() => {
+            window.addEventListener("scroll", handleScroll);
+
+            nextTick(() => {
+                const slider = scrollContainer.value;
+                if (!slider) return;
+
+                slider.addEventListener("mousedown", handleMouseDown);
+                slider.addEventListener("mouseleave", handleMouseLeave);
+                slider.addEventListener("mouseup", handleMouseUp);
+                slider.addEventListener("mousemove", handleMouseMove);
+                slider.addEventListener("wheel", handleWheelScroll);
+            });
         });
 
-        // Прокрутка колесом мыши
-        slider.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            slider.scrollLeft += e.deltaY * 0.2; // Прокручиваем горизонтально
+        onUnmounted(() => {
+            window.removeEventListener("scroll", handleScroll);
+
+            const slider = scrollContainer.value;
+            if (!slider) return;
+
+            slider.removeEventListener("mousedown", handleMouseDown);
+            slider.removeEventListener("mouseleave", handleMouseLeave);
+            slider.removeEventListener("mouseup", handleMouseUp);
+            slider.removeEventListener("mousemove", handleMouseMove);
+            slider.removeEventListener("wheel", handleWheelScroll);
         });
-    }
-}
+
+        return {
+            categories,
+            currentRestaurantLogo,
+            currentRestaurantName,
+            currentTab,
+            isActiveTab,
+            goToCatalog,
+            goToCategories,
+            hasNewItems,
+            listWrapper,
+            logo,
+            scrollContainer,
+        };
+    },
+};
 </script>
 
 <style scoped>
@@ -89,7 +226,7 @@ export default {
     top: calc(65px + 2 * 24px);
     width: 100%;
     height: 48px;
-    z-index: 10;
+    z-index: 2;
 }
 
 .category-tabs__wrapper {
@@ -179,4 +316,12 @@ export default {
     border: 1px solid black;
     padding: 3px 5px;
 }
+</style>
+
+<style scoped>
+    @media (max-width: 768px){
+        .category-tabs {
+            top: calc(48px + 18px + 16px);
+        }
+    }
 </style>

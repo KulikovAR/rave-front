@@ -1,89 +1,140 @@
 <template>
-    <div class="cart-page page">
-        <Header
-            @showContactsPopUp="showContactsPopUp"
+    <div class="cart-page page" :class="{ empty: totalPrice === 0 }">
+        <Header 
+            @showContactsPopUp="showContactsPopUp" 
+            :restaurantSlug="restaurantSlug"
         />
-        <ContactsPopUp
+        <ContactsPopUp 
             ref="ContactsPopUp"
+            :restaurantSlug="restaurantSlug"
         />
-        <BreadCrumbs :links="this.breadCrumbs" />
-        <Cart/>
-        <RecommendedProductsSlider/>
+
+        <BreadCrumbs :links="breadCrumbs" />
+
+        <template v-if="totalPrice > 0">
+            <Cart 
+                :restaurantSlug="restaurantSlug"
+                @itemRemovedFromCart="handleCartState" 
+            />
+            <RecommendedProductsSlider
+                ref="RecommendedProductsSlider"
+                :restaurantSlug="restaurantSlug"
+                :products="recommendedProductsList.map(product => ({
+                    ...product,
+                    image: getFullImage(product.media[0].path)
+                }))" 
+                @itemAddedToCart="handleCartState"
+            />
+        </template>
+
+        <template v-else>
+            <EmptyCartContent
+                :restaurantSlug="restaurantSlug"
+            />
+        </template>
+
+        <NotWorkingTimePopUp
+            :restaurantSlug="restaurantSlug"
+        />
     </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import Header from '../components/Header.vue';
 import ContactsPopUp from '../components/ContactsPopUp.vue';
 import BreadCrumbs from '../components/BreadCrumbs.vue';
 import Cart from '../components/Cart.vue';
 import RecommendedProductsSlider from '../components/RecommendedProductsSlider.vue';
+import EmptyCartContent from '../components/EmptyCartContent.vue';
+import NotWorkingTimePopUp from "../components/NotWorkingTimePopUp.vue";
+
+const BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
+
 export default {
-    name: 'ProductPage',
+    name: 'CartPage',
     components: {
         Header,
         ContactsPopUp,
         BreadCrumbs,
         Cart,
-        RecommendedProductsSlider
+        RecommendedProductsSlider,
+        EmptyCartContent,
+        NotWorkingTimePopUp
     },
-    data(){
-        return{
-            categories: [],
+    data() {
+        return {
+            restaurantSlug: this.$route.params.restaurantSlug,
             breadCrumbs: [],
-            product: {}
-        }
+            isProductsLoaded: false,  // Флаг для отслеживания загрузки продуктов
+        };
+    },
+    computed: {
+        ...mapGetters("cart", ["getCart", "getTotalPrice"]),
+        // Используем геттер из Vuex для получения рекомендованных продуктов
+        recommendedProductsList() {
+            return this.$store.getters['restaurant/recommendedProducts'](this.restaurantSlug);
+        },
+        totalPrice() {
+            return this.getTotalPrice(this.restaurantSlug);
+        },
     },
     methods: {
-        showContactsPopUp(){
+        getFullImage(imagePath) {
+            return `${BASE_URL}${imagePath}`;
+        },
+        showContactsPopUp() {
             this.$refs.ContactsPopUp.showPopUp();
         },
-        initData(){
-            this.product = {
-                name: '',
-                id: "9e154f88-e460-4086-8e08-141d74786295",
-                category_id: "9e154f65-2a5c-487d-957e-e8e8b7b0e372",
-                name: "Шаурма кебаб гуакамоле",
-                description: "Лаваш, кебаб свино-говяжий, тар тар из томатов и красного лука, гуакамоле, соус белый, свежий шпинат, томат, красный лук, сыр чеддер, омлет",
-                price: "390.00",
-                weight: 350,
-                calories: 890,
-                hidden: 0,
-                new: 1,
-                priority: 1,
-                created_at: "2025-01-29T09:40:58.000000Z",
-                updated_at: "2025-01-31T10:45:20.000000Z",
-                media: [
-                    {
-                        "id": "9e154f88-e8a1-4de6-84bc-64abff81b421",
-                        "product_id": "9e154f88-e460-4086-8e08-141d74786295",
-                        "path": "01JJRPYWQ63005FHZE7E21S1H5.jpg",
-                        "created_at": "2025-01-29T09:40:58.000000Z",
-                        "updated_at": "2025-01-29T09:40:58.000000Z"
-                    }
-                ]
-            };
+        initData() {
             this.breadCrumbs = [
-                {
-                    name: 'Каталог',
-                    path: '/catalog',
-                },
-                {
-                    name: 'Корзина',
-                    path: '/cart'
-                }
+                { textname: 'Каталог', name: 'categories', params: { restaurantSlug: this.restaurantSlug } },
+                { textname: 'Корзина', name: 'cart', params: { restaurantSlug: this.restaurantSlug } }
             ];
+        },
+        handleCartState() {
+            // Пересчитываем рекомендованные товары после изменений в корзине
+            this.updateRecommendedProducts();
+        },
+        loadProductsIfNeeded() {
+            if (this.$store.state.restaurant.products.length === 0) {
+                this.$store.dispatch('restaurant/fetchProducts').then(() => {
+                    this.isProductsLoaded = true;
+                    this.updateRecommendedProducts();
+                });
+            } else {
+                this.isProductsLoaded = true;
+                this.updateRecommendedProducts();
+            }
+        },
+        updateRecommendedProducts() {
+            this.$store.dispatch('restaurant/updateRecommendedProducts', this.restaurantSlug);
         }
     },
-    mounted(){
+    mounted() {
         this.initData();
-    }
-}
+        this.loadProductsIfNeeded();
+    },
+};
 </script>
 
 <style scoped>
     .cart-page{
         padding-top: calc(65px + 2 * 24px);
         padding-bottom: calc(65px + 2 * 24px);
+        min-height: 100vh;
+    }
+
+    .cart-page.empty{
+        height: 100vh;
+    }
+</style>
+
+<style scoped>
+    @media (max-width: 768px) {
+        .cart-page {
+            padding-top: calc(48px + 18px* 2);
+            padding-bottom: 22px;
+        }
     }
 </style>

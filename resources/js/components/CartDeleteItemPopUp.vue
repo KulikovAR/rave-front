@@ -20,7 +20,6 @@
 
             <img class="cart-delete-item__pop-up__cross" src="/images/pop-ups/cross.svg" alt="close" @click="closePopUp()">
         </div>
-        
 
         <div class="cart-delete-item__pop-up__bg"></div>
     </div>
@@ -30,26 +29,39 @@
 export default {
     name: 'CartDeleteItemPopUp',
     methods: {
-        closePopUp(){
+        closePopUp() {
             document.querySelector('.cart-delete-item__pop-up').style.display = "none";
+            document.body.style.overflow = 'auto';
         },
-        showPopUp(){
+        showPopUp() {
             document.querySelector('.cart-delete-item__pop-up').style.display = "block";
+            document.body.style.overflow = 'hidden';
         },
-        deleteCartItemConfirm(){
-            this.$emit('deleteCartItemConfirm',this.item);
+        deleteCartItemConfirm() {
+            this.$emit('deleteCartItemConfirm', this.item);
         }
     },
-    data(){
+    data() {
         return {
             item: {}
-        }
+        };
     },
     mounted() {
-        document.querySelector('.cart-delete-item__pop-up__bg').addEventListener('click', () => {
-            this.closePopUp();
+        // Используем $nextTick, чтобы гарантировать, что элемент существует
+        this.$nextTick(() => {
+            const popUpBackground = document.querySelector('.cart-delete-item__pop-up__bg');
+            if (popUpBackground) {
+                popUpBackground.addEventListener('click', this.closePopUp);
+            }
         });
     },
+    beforeDestroy() {
+        // Удаляем обработчик перед уничтожением компонента
+        const popUpBackground = document.querySelector('.cart-delete-item__pop-up__bg');
+        if (popUpBackground) {
+            popUpBackground.removeEventListener('click', this.closePopUp);
+        }
+    }
 }
 </script>
 
@@ -189,5 +201,57 @@ export default {
     .cart-delete-item__pop-up__btn.delete:hover{
         background: var(--Btn-Hover-Red, #BE1522);
         border: 1px solid var(--Btn-Hover-Red, #BE1522);
+    }
+</style>
+
+<style scoped>
+    @media (max-width: 768px){
+        .cart-delete-item__pop-up__frame{
+            gap: 16px;
+            padding: 24px 24px;
+            width: calc(100% - 16px* 2);
+            max-width: unset;
+        }
+        
+    }
+    @media (max-width: 500px){
+        .cart-delete-item__pop-up__title{
+            font-family: Vela Sans GX;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 22.86px;
+            letter-spacing: -0.05em;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+        }
+        .cart-delete-item__pop-up__text{
+            font-family: Vela Sans GX;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20.3px;
+            letter-spacing: -0.05em;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+        }
+        .cart-delete-item__pop-up__btns{
+            height: 37px;
+        }
+        .cart-delete-item__pop-up__btn{
+            font-family: Vela Sans GX;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 17.4px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+        }
+        .cart-delete-item__pop-up__cross{
+            width: 16px;
+            height: 16px;
+            top: 8px;
+            right: 8px;
+        }
     }
 </style>

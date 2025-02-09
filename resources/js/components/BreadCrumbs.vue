@@ -2,13 +2,16 @@
     <div class="bread-crumbs">
         <div class="container">
             <div class="bread-crumbs__list">
-                <img class="bread-crumbs__back-arrow" src="/images/bread-crumbs/left-arrow.svg" alt="Назад">
+                <img class="bread-crumbs__back-arrow" src="/images/bread-crumbs/left-arrow.svg">
                 <router-link
                     v-for="(item,index) in this.links"
                     :key="index"
-                    :to="{ path:item.path }" class="bread-crumbs__item"
+                    
+                    :to="{ name: item.name, params: item.params}"
+                    class="bread-crumbs__item"
                 >
-                        {{item.name}}
+                <!-- :to="{ path:item.path }"  -->
+                        {{item.textname}}
                 </router-link>
             </div>
         </div>
@@ -32,6 +35,7 @@ export default {
         height: 24px;
         display: flex;
         align-items: center;
+        padding-left: 24px;
     }
 
     .bread-crumbs__list *{
@@ -57,8 +61,6 @@ export default {
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
         color: var(--Btn-Black, #000000);
-
-
     }
     .bread-crumbs__item::after{
         content: '';
@@ -79,5 +81,25 @@ export default {
 
     .bread-crumbs__list .bread-crumbs__item:last-child::after{
         display: none;
+    }
+</style>
+
+<style scoped>
+    @media (max-width: 768px){
+        .bread-crumbs{
+            margin-bottom: 18px;
+        }
+        .bread-crumbs__item{
+            font-family: Vela Sans GX;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 18.34px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+        }
+        .bread-crumbs__list{
+            padding-left: 0;
+        }
     }
 </style>

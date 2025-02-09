@@ -22,7 +22,7 @@
                     </div>
                     
                     <div class="schedule__pop-up__content-item">
-                        Принимаем заказы на доставку и самовывоз  ПН-ЧТ: 11:00-20:20, ПТ-ВС: 11:00-21:20
+                        Принимаем заказы на доставку и самовывоз <nobr> ПН-ЧТ: 11:00-20:20,</nobr> <nobr>ПТ-ВС: 11:00-21:20</nobr>
                     </div>
                 </div>
                 
@@ -32,13 +32,13 @@
                 <div class="schedule__pop-up__footer-item">
                     резервный номер для заказа: <br>
                     <span class="red-text">
-                        +7 (949)  099-53-93
+                        <a href="tel:+79490995393">+7 (949)  099-53-93</a>
                     </span>
                 </div>
                 <div class="schedule__pop-up__footer-item">
                     Единый номер службы достваки: <br>
                     <span class="red-text">
-                        238
+                        <a href="tel:238">238</a>
                     </span>
                 </div>
             </div>
@@ -58,27 +58,19 @@ export default {
     methods: {
         closePopUp(){
             document.querySelector('.schedule__pop-up').style.display = "none";
+            document.body.style.overflow = 'auto';
         },
         showPopUp(){
             document.querySelector('.schedule__pop-up').style.display = "block";
+            document.body.style.overflow = 'hidden';
         },
+    },
+    props: {
+        restaurants: Array,
     },
     data(){
         return {
-            restaurants: [
-                {
-                    'name': 'RAVE BURGER',
-                    'address': 'Г. Донецк. ул. Университетская 20',
-                },
-                {
-                    'name': 'RAVE BISTRO',
-                    'address': 'Г. Донецк, бул. Пушкина 18',
-                },
-                {
-                    'name': 'RAVE SUSHI',
-                    'address': 'г. Донецк, бул. Пушкина 25',
-                }
-            ]
+
         }
     },
     mounted() {
@@ -128,6 +120,8 @@ export default {
         background-size: cover, cover; 
         background-position: center, center; 
         background-repeat: no-repeat, no-repeat; 
+
+        overflow-y: scroll;
     }
     .schedule__pop-up__bg{
         position: absolute;
@@ -202,7 +196,7 @@ export default {
 
         width: 100%;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         text-transform: uppercase;
     }
 
@@ -217,10 +211,102 @@ export default {
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
         color: #000;
-
+        margin-right: 40px;
     }
     span.red-text{
         font-family: Vela Sans GX;
         color: #BE1522;
+    }
+    span.red-text a{
+        font-family: Vela Sans GX;
+        color: #BE1522;
+        text-decoration: none;
+    }
+    nobr{
+        font-family: inherit;
+    }
+</style>
+
+<style scoped>
+    @media(max-width: 1214px){
+        .schedule__pop-up__content,
+        .schedule__pop-up__footer {
+            padding: 0 40px;
+        }
+    }
+
+    @media(max-width: 914px){
+        .schedule__pop-up__content,
+        .schedule__pop-up__footer {
+            padding: 0 20px;
+        }
+    }
+
+    @media (max-width: 768px){
+        .schedule__pop-up__frame{
+            padding: 24px 12px;
+            margin: 18px 16px 26px;
+            width: calc(100% - 16px* 2);
+            height: calc(100% - 18px - 26px);
+            height: fit-content;
+            max-height: calc(100% - 18px - 26px);
+        }
+        .schedule__pop-up__header{
+            height: 33px;
+            margin-bottom: 56px;
+        }
+        .schedule__pop-up__content{
+            margin-bottom: 12px;
+            padding: 0;
+        }
+        .schedule__pop-up__content-title{
+            font-family: Vela Sans GX;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 26.1px;
+            letter-spacing: -0.05em;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            margin-bottom: 24px;
+        }
+        .schedule__pop-up__content-item{
+            font-family: Vela Sans GX;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20.3px;
+            letter-spacing: -0.05em;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+        }
+        .schedule__pop-up__content-item+.schedule__pop-up__content-item{
+            margin-top: 24px;
+        }
+        .schedule__pop-up__footer{
+            margin-bottom: 0;
+            padding: 0;
+            flex-direction: column;
+        }
+        .schedule__pop-up__footer .schedule__pop-up__footer-item{
+            font-family: Vela Sans GX;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20.3px;
+            letter-spacing: -0.05em;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            
+            margin-right: 0;
+            width: 100%;
+        }
+        .schedule__pop-up__footer .schedule__pop-up__footer-item+.schedule__pop-up__footer-item{
+            margin-top: 12px;
+        }
+
+        .schedule__pop-up__content-list .schedule__pop-up__content-item:last-child{
+            margin-top: 56px;
+        }
     }
 </style>

@@ -5,222 +5,146 @@
                 <div class="contacts__pop-up__header__logo">
                     <img class="contacts__pop-up__header__logo-img" src="/images/logo.svg" alt="logo">
                 </div>
-                <img class="contacts__pop-up__cross" src="/images/pop-ups/cross.svg" alt="close" @click="closePopUp()">
+                <img class="contacts__pop-up__cross" src="/images/pop-ups/cross.svg" alt="close" @click="closePopUp">
             </div>
-            
-            <div class="contacts__pop-up__content">
-                <div class="contacts__pop-up__content-title">
-                    Контакты
-                </div>
+
+            <div class="contacts__pop-up__content" v-if="restaurant">
+                <div class="contacts__pop-up__content-title">Контакты</div>
                 <div class="contacts__pop-up__content-list">
                     <div class="contacts__pop-up__content-item">
-                        <span class="red-text">{{this.restaurant.name}}:</span> {{this.restaurant.address}} <br>
-                        Принимаем заказы на доставку и самовывоз  <br>
-                        <!-- ПН-ЧТ: 11:00-20:20, ПТ-ВС: 11:00-21:20 -->
+                        <span class="red-text">{{ restaurant.name }}:</span> {{ restaurant.address }} <br>
+                        Принимаем заказы на доставку и самовывоз <br>
                         {{ groupSchedule() }}
                     </div>
                 </div>
-                
             </div>
 
-            <div class="contacts__pop-up__footer">
+            <div v-if="restaurant" class="contacts__pop-up__footer">
                 <div class="contacts__pop-up__content-item">
-                    резервный номер для заказа: 
+                    резервный номер для заказа:
                     <span class="red-text">
-                        +7 (949)  099-53-93
+                        <a href="tel:+79490995393">+7 (949) 099-53-93</a>
                     </span>
                 </div>
                 <div class="contacts__pop-up__content-item">
-                    Единый номер службы достваки: 
+                    Единый номер службы доставки:
                     <span class="red-text">
-                        238
+                        <a href="tel:238">238</a>
                     </span>
                 </div>
             </div>
 
-
-            <div class="contacts__pop-up__map">
-                <img class="contacts__pop-up__map-img" :src="this.restaurant.map_image" alt="">
+            <div v-if="restaurant" class="contacts__pop-up__map">
+                <a class="contacts__pop-up__map-link" href="#" @click.prevent="openMap">
+                    <img class="contacts__pop-up__map-img" :src="getFullImagePath(restaurant.map_image)" alt="Карта">
+                </a>
             </div>
-            
-
-
-            
         </div>
-        
 
-        <div class="contacts__pop-up__bg"></div>
+        <div class="contacts__pop-up__bg" @click="closePopUp"></div>
     </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
     name: 'ContactsPopUp',
-    data(){
-        return {
-            restaurant: {},
-            schedule: []
+    props: {
+        restaurantSlug: String,
+    },
+    computed: {
+        ...mapState('restaurant', ['restaurants']),
+        restaurant() {
+            return this.restaurants.find(r => r.slug === this.restaurantSlug) || null;
         }
     },
     methods: {
-        closePopUp(){
+        closePopUp() {
             document.querySelector('.contacts__pop-up').style.display = "none";
+            document.body.style.overflow = 'auto';
         },
-        showPopUp(){
+        showPopUp() {
             document.querySelector('.contacts__pop-up').style.display = "block";
-        },
-        initData(){
-            this.restaurant = {
-                name: 'RAVE BISTRO',
-                address: 'Г. Донецк, бул. Пушкина 18',
-                map_image: '/images/restaurants/maps/map-1.png'
-            };
-            this.schedule = [
-                {
-                    "id": "9e154f52-9616-4711-b0d1-f381b7bd56ba",
-                    "day_of_week": "Monday",
-                    "is_open": 1,
-                    "opening_time": "11:00:00",
-                    "closing_time": "20:20:00",
-                    "restaurant_id": "9e154f52-885f-431d-9a98-740382fd1fbd",
-                    "created_at": "2025-01-29T09:40:23.000000Z",
-                    "updated_at": "2025-01-29T09:40:23.000000Z"
-                },
-                {
-                    "id": "9e154f52-9978-47a9-9a9e-b619bfe3ff2c",
-                    "day_of_week": "Wednesday",
-                    "is_open": 1,
-                    "opening_time": "11:30:00",
-                    "closing_time": "20:20:00",
-                    "restaurant_id": "9e154f52-885f-431d-9a98-740382fd1fbd",
-                    "created_at": "2025-01-29T09:40:23.000000Z",
-                    "updated_at": "2025-01-29T09:40:23.000000Z"
-                },
-                {
-                    "id": "9e154f52-97f1-44c2-ab8d-2ffe4775f936",
-                    "day_of_week": "Tuesday",
-                    "is_open": 1,
-                    "opening_time": "11:00:00",
-                    "closing_time": "20:20:00",
-                    "restaurant_id": "9e154f52-885f-431d-9a98-740382fd1fbd",
-                    "created_at": "2025-01-29T09:40:23.000000Z",
-                    "updated_at": "2025-01-29T09:40:23.000000Z"
-                },
-                
-                {
-                    "id": "9e154f52-9b08-4143-9303-df48a9094715",
-                    "day_of_week": "Thursday",
-                    "is_open": 1,
-                    "opening_time": "11:00:00",
-                    "closing_time": "20:20:00",
-                    "restaurant_id": "9e154f52-885f-431d-9a98-740382fd1fbd",
-                    "created_at": "2025-01-29T09:40:23.000000Z",
-                    "updated_at": "2025-01-29T09:40:23.000000Z"
-                },
-                {
-                    "id": "9e154f52-9c8c-4bc8-8470-f8fbd95d1e4d",
-                    "day_of_week": "Friday",
-                    "is_open": 1,
-                    "opening_time": "11:00:00",
-                    "closing_time": "21:20:00",
-                    "restaurant_id": "9e154f52-885f-431d-9a98-740382fd1fbd",
-                    "created_at": "2025-01-29T09:40:23.000000Z",
-                    "updated_at": "2025-01-29T09:40:23.000000Z"
-                },
-                {
-                    "id": "9e154f52-9e25-448e-86bc-555e2bc5c022",
-                    "day_of_week": "Saturday",
-                    "is_open": 1,
-                    "opening_time": "11:00:00",
-                    "closing_time": "21:20:00",
-                    "restaurant_id": "9e154f52-885f-431d-9a98-740382fd1fbd",
-                    "created_at": "2025-01-29T09:40:23.000000Z",
-                    "updated_at": "2025-01-29T09:40:23.000000Z"
-                },
-                {
-                    "id": "9e154f52-9fd2-400b-ac71-9edef12ac706",
-                    "day_of_week": "Sunday",
-                    "is_open": 1,
-                    "opening_time": "11:00:00",
-                    "closing_time": "21:20:00",
-                    "restaurant_id": "9e154f52-885f-431d-9a98-740382fd1fbd",
-                    "created_at": "2025-01-29T09:40:23.000000Z",
-                    "updated_at": "2025-01-29T09:40:23.000000Z"
-                }
-            ];
+            document.body.style.overflow = 'hidden';
         },
         groupSchedule() {
-            // Сортировка дней недели по порядку (ПН, ВТ, СР, ЧТ, ПТ, СБ, ВС)
-            const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            if (!this.restaurant || !this.restaurant.schedule) return '';
 
-            // Сортируем расписание по дням недели
-            this.schedule.sort((a, b) => dayOrder.indexOf(a.day_of_week) - dayOrder.indexOf(b.day_of_week));
+            const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            const sortedSchedule = [...this.restaurant.schedule].sort(
+                (a, b) => dayOrder.indexOf(a.day_of_week) - dayOrder.indexOf(b.day_of_week)
+            );
 
             let groupedSchedule = [];
             let groupedDays = [];
             let previousTime = null;
 
-            // Проходим по расписанию
-            for (let i = 0; i < this.schedule.length; i++) {
-                let currentDay = this.schedule[i];
-                let currentDayString = this.getDayName(currentDay.day_of_week);
-                let currentTime = `${this.formatTime(currentDay.opening_time)} - ${this.formatTime(currentDay.closing_time)}`;
+            for (const day of sortedSchedule) {
+                if (!day.is_open || !day.opening_time || !day.closing_time) continue;
+                
+                const currentTime = `${this.formatTime(day.opening_time)} - ${this.formatTime(day.closing_time)}`;
+                const currentDayString = this.getDayName(day.day_of_week);
 
-                // Если время совпадает с предыдущим, группируем дни
                 if (currentTime === previousTime) {
                     groupedDays.push(currentDayString);
                 } else {
-                    // Если расписание изменилось, добавляем в массив, объединяя дни в диапазоны
                     if (groupedDays.length > 0) {
                         groupedSchedule.push(this.formatGroupedDays(groupedDays, previousTime));
                     }
-                    
-                    // Обновляем для нового времени
                     groupedDays = [currentDayString];
                     previousTime = currentTime;
                 }
             }
 
-            // Добавляем последние группы
             if (groupedDays.length > 0) {
                 groupedSchedule.push(this.formatGroupedDays(groupedDays, previousTime));
             }
 
-            return groupedSchedule.join(', '); // Соединяем группы в одну строку через запятую
+            return groupedSchedule.join(', ');
         },
-
-        // Функция для форматирования группы дней в диапазон
         formatGroupedDays(days, time) {
-            let groupedRange = days.length > 1 ? `${days[0]}-${days[days.length - 1]}` : days[0];
-            return `${groupedRange}: ${time}`;
+            return days.length > 1 ? `${days[0]}-${days[days.length - 1]}: ${time}` : `${days[0]}: ${time}`;
         },
-
-        // Функция для получения русского названия дня недели
         getDayName(day) {
-            switch (day) {
-                case 'Monday': return 'ПН';
-                case 'Tuesday': return 'ВТ';
-                case 'Wednesday': return 'СР';
-                case 'Thursday': return 'ЧТ';
-                case 'Friday': return 'ПТ';
-                case 'Saturday': return 'СБ';
-                case 'Sunday': return 'ВС';
-                default: return '';
+            return {
+                'Monday': 'ПН', 'Tuesday': 'ВТ', 'Wednesday': 'СР', 'Thursday': 'ЧТ', 
+                'Friday': 'ПТ', 'Saturday': 'СБ', 'Sunday': 'ВС'
+            }[day] || '';
+        },
+        formatTime(time) {
+            return time.slice(0, 5);
+        },
+        getFullImagePath(imageName) {
+            return `https://rave-back.pisateli-studio.ru/storage/${imageName}`;
+        },
+        
+        // Новый метод для открытия карты
+        openMap() {
+            if (!this.restaurant || !this.restaurant.map_link) return;
+
+            const yandexLink = this.restaurant.map_link;
+            const yandexNavigator = yandexLink.replace("yandex.ru/maps", "yandexnavi://route?url=");
+
+            if (this.isMobile()) {
+                const useNavigator = confirm("Открыть в Яндекс.Навигаторе? (Отмена — открыть в браузере)");
+                window.location.href = useNavigator ? yandexNavigator : yandexLink;
+            } else {
+                window.open(yandexLink, "_blank");
             }
         },
 
-        // Функция для форматирования времени (удаляет секунды)
-        formatTime(time) {
-            return time.split(':').slice(0, 2).join(':'); // Убираем секунды
+        // Метод для проверки устройства
+        isMobile() {
+            return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         }
     },
-    mounted() {
-        this.initData();
-        document.querySelector('.contacts__pop-up__bg').addEventListener('click', () => {
-            this.closePopUp();
-        });
-    },
-}
+    created() {
+        if (!this.restaurants || this.restaurants.length === 0) {
+            this.$store.dispatch('restaurant/fetchRestaurants');
+        }
+    }
+};
 </script>
 
 <style scoped>
@@ -262,6 +186,8 @@ export default {
         background-size: cover, cover; 
         background-position: center, center; 
         background-repeat: no-repeat, no-repeat; 
+
+        overflow-y: scroll;
     }
     .contacts__pop-up__bg{
         position: absolute;
@@ -354,9 +280,117 @@ export default {
     span.red-text{
         font-family: Vela Sans GX;
         color: #BE1522;
+        white-space: nowrap;
+    }
+    span.red-text a{
+        font-family: Vela Sans GX;
+        color: #BE1522;
+        text-decoration: none;
     }
 
     .contacts__pop-up__map{
         padding: 0 120px;
+        height: 300px;
+        width: 100%;
+        border-radius: 12px;
+        /* overflow: hidden; */
+    }
+    .contacts__pop-up__map-link{
+        height: 100%;
+        display: block;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .contacts__pop-up__map-img{
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+        object-position: left top;
+    }
+</style>
+
+<style scoped>
+    @media(max-width: 1214px){
+        .contacts__pop-up__content,
+        .contacts__pop-up__footer,
+        .contacts__pop-up__map {
+            padding: 0 40px;
+        }
+    }
+
+    @media(max-width: 914px){
+        .contacts__pop-up__content,
+        .contacts__pop-up__footer,
+        .contacts__pop-up__map {
+            padding: 0 20px;
+        }
+    }
+
+    @media (max-width: 768px){
+        .contacts__pop-up__frame{
+            padding: 24px 12px;
+            margin: 18px 16px 26px;
+            width: calc(100% - 16px* 2);
+            height: calc(100% - 18px - 26px);
+            height: fit-content;
+            max-height: calc(100% - 18px - 26px);
+        }
+        .contacts__pop-up__header{
+            height: 33px;
+            margin-bottom: 32px;
+        }
+        .contacts__pop-up__content{
+            margin-bottom: 24px;
+            padding: 0;
+        }
+        .contacts__pop-up__map{
+            padding: 0;
+            height: auto;
+        }
+        .contacts__pop-up__content-title{
+            font-family: Vela Sans GX;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 26.1px;
+            letter-spacing: -0.05em;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            margin-bottom: 24px;
+        }
+        .contacts__pop-up__content-item{
+            font-family: Vela Sans GX;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20.3px;
+            letter-spacing: -0.05em;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+        }
+        .contacts__pop-up__content-item+.contacts__pop-up__content-item{
+            margin-top: 24px;
+        }
+        .contacts__pop-up__footer{
+            margin-bottom: 32px;
+            padding: 0;
+        }
+        .contacts__pop-up__footer .contacts__pop-up__content-item{
+            font-family: Vela Sans GX;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20.3px;
+            letter-spacing: -0.05em;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+        }
+        /* .contacts__pop-up__map-link{
+            height: 300px;
+        }
+        .contacts__pop-up__map-img{
+            object-fit: cover;
+            object-position: center;
+        } */
     }
 </style>
