@@ -78,7 +78,17 @@ export default {
             const openingTime = todaySchedule.opening_time?.substring(0, 5);
             const closingTime = todaySchedule.closing_time?.substring(0, 5);
 
-            if (!openingTime || !closingTime || currentTime < openingTime || currentTime > closingTime) {
+            if (!openingTime || !closingTime) {
+                this.nextOpenTime = this.getNextOpenTime();
+                return true;
+            }
+
+            if (currentTime < openingTime) {
+                this.nextOpenTime = `${openingTime}`;
+                return true;
+            }
+
+            if (currentTime > closingTime) {
                 this.nextOpenTime = this.getNextOpenTime();
                 return true;
             }

@@ -23357,7 +23357,15 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }
       var openingTime = (_todaySchedule$openin = todaySchedule.opening_time) === null || _todaySchedule$openin === void 0 ? void 0 : _todaySchedule$openin.substring(0, 5);
       var closingTime = (_todaySchedule$closin = todaySchedule.closing_time) === null || _todaySchedule$closin === void 0 ? void 0 : _todaySchedule$closin.substring(0, 5);
-      if (!openingTime || !closingTime || currentTime < openingTime || currentTime > closingTime) {
+      if (!openingTime || !closingTime) {
+        this.nextOpenTime = this.getNextOpenTime();
+        return true;
+      }
+      if (currentTime < openingTime) {
+        this.nextOpenTime = "".concat(openingTime);
+        return true;
+      }
+      if (currentTime > closingTime) {
         this.nextOpenTime = this.getNextOpenTime();
         return true;
       }
