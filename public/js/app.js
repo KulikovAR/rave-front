@@ -23639,6 +23639,7 @@ __webpack_require__.r(__webpack_exports__);
       document.body.style.overflow = 'hidden';
     },
     redirectToMain: function redirectToMain() {
+      this.closePopUp();
       this.$router.push({
         name: 'main'
       });

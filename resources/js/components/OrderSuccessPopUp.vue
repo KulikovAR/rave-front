@@ -37,6 +37,7 @@ export default {
             document.body.style.overflow = 'hidden';
         },
         redirectToMain(){
+            this.closePopUp();
             this.$router.push({ name: 'main' });
         }
     },
