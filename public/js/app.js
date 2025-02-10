@@ -23639,7 +23639,6 @@ __webpack_require__.r(__webpack_exports__);
       document.body.style.overflow = 'hidden';
     },
     redirectToMain: function redirectToMain() {
-      this.closePopUp();
       this.$router.push({
         name: 'main'
       });
@@ -25983,7 +25982,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, " Первый освободившийся оператор свяжется с вами для подтверждения заказа ", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "order-success__pop-up__btn go-main",
     onClick: _cache[0] || (_cache[0] = function ($event) {
-      return $options.redirectToMain();
+      return $options.closePopUp();
     })
   }, " На главную ")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     "class": "order-success__pop-up__cross",

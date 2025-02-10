@@ -10,7 +10,7 @@
             </div>
 
             <div class="order-success__pop-up__btns">
-                <div class="order-success__pop-up__btn go-main" @click="redirectToMain()">
+                <div class="order-success__pop-up__btn go-main" @click="closePopUp()">
                     На главную
                 </div>
             </div>
@@ -37,7 +37,6 @@ export default {
             document.body.style.overflow = 'hidden';
         },
         redirectToMain(){
-            this.closePopUp();
             this.$router.push({ name: 'main' });
         }
     },
