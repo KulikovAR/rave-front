@@ -119,6 +119,11 @@ export default {
         deleteCartItemConfirm(data) {
             this.$refs.CartDeleteItemPopUp.closePopUp();
             this.removeItem({ restaurantId: this.restaurantSlug, itemId: data.id });
+            this.$nextTick(() => {
+                if (this.cart.length === 0) {
+                    this.goToCategories();
+                }
+            });
             this.$emit('itemRemovedFromCart');
         },
 
@@ -146,6 +151,10 @@ export default {
                 } 
             });
         },
+        goToCategories(){
+            const restaurantSlug = this.restaurantSlug;
+            this.$router.push({ name: 'categories', params: { restaurantSlug } });
+        }
     }
 };
 </script>

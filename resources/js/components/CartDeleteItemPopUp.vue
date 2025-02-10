@@ -31,11 +31,14 @@ export default {
     methods: {
         closePopUp() {
             document.querySelector('.cart-delete-item__pop-up').style.display = "none";
-            document.body.style.overflow = 'auto';
+            document.body.classList.remove('scroll');
+            document.body.style.paddingRight = '';
         },
         showPopUp() {
+            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+            document.body.style.paddingRight = `${scrollbarWidth}px`;
+            document.body.classList.add('scroll');
             document.querySelector('.cart-delete-item__pop-up').style.display = "block";
-            document.body.style.overflow = 'hidden';
         },
         deleteCartItemConfirm() {
             this.$emit('deleteCartItemConfirm', this.item);

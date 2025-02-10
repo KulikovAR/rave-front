@@ -29,12 +29,15 @@ export default {
     methods: {
         closePopUp(){
             document.querySelector('.order-success__pop-up').style.display = "none";
-            document.body.style.overflow = 'auto';
+            document.body.classList.remove('scroll');
+            document.body.style.paddingRight = '';
             this.redirectToMain();
         },
         showPopUp(){
+            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+            document.body.style.paddingRight = `${scrollbarWidth}px`;
+            document.body.classList.add('scroll');
             document.querySelector('.order-success__pop-up').style.display = "block";
-            document.body.style.overflow = 'hidden';
         },
         redirectToMain(){
             this.$router.push({ name: 'main' });

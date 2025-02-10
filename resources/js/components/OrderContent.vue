@@ -151,8 +151,10 @@
 
                     </div>
 
-
                 </div>
+
+                <EmptyCartContent v-else />
+
             </div>
 
             <div class="cart-total-order mobile" v-if="cart.length">
@@ -182,6 +184,7 @@ import { mapGetters, mapActions } from 'vuex';
 import CartDeleteItemPopUp from './CartDeleteItemPopUp.vue';
 import OrderSuccessPopUp from './OrderSuccessPopUp.vue';
 import FormErrorNotify from './FormErrorNotify.vue';
+import EmptyCartContent from './EmptyCartContent.vue';
 import api from '../api';
 
 export default {
@@ -189,7 +192,8 @@ export default {
     components: { 
         CartDeleteItemPopUp, 
         OrderSuccessPopUp, 
-        FormErrorNotify 
+        FormErrorNotify,
+        EmptyCartContent
     },
     props: {
         restaurantSlug: String,
@@ -369,7 +373,8 @@ export default {
     border-left: 1px solid var(--Color-Gray, #9E9E9E);
     width: 100%;
     display: flex;
-    align-items: flex-start;
+    /* align-items: flex-start; */
+    align-items: stretch;
     height: 100%;
 }
 
@@ -382,7 +387,7 @@ export default {
     flex-direction: column;
     align-items: flex-start;
     flex-grow: 1;
-    height: 100%;
+    /* height: 100%; */
 }
 
 .order-cart__wrapper {
@@ -394,7 +399,7 @@ export default {
     flex-direction: column;
     align-items: flex-start;
     flex-grow: 1;
-    height: 100%;
+    /* height: 100%; */
 }
 
 .order-content__title {
@@ -589,6 +594,8 @@ textarea.order-form__input {
         padding-right: 32px;
 
         overflow-y: scroll;
+
+        height: 361px;
     }
 
     .cart__list::-webkit-scrollbar {
@@ -603,6 +610,7 @@ textarea.order-form__input {
         width: 100%;
         align-items: stretch;
         border-bottom: 1px solid #9E9E9E;
+        padding-top: 6px;
     }
 
     .cart__item__photo{
@@ -892,7 +900,10 @@ textarea.order-form__input {
             width: 100%;
         }
         .cart__list{
-            height: 371px;
+            height: 361px;
+        }
+        .cart__item{
+            padding-top: 6px;
         }
     }
 

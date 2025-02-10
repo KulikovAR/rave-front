@@ -26,6 +26,7 @@
                 :key="index"
                 class="restaurant__item"
                 :style="{ backgroundImage: `url('/images/restaurants/paper.png'), url('${getFullImagePath(item.background_image)}')` }"
+                @click="goToRestaurant(item.slug)"
             >
                 <div class="restaurant__noise"></div>
                 <div class="restaurant__item__logo">

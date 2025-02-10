@@ -103,6 +103,10 @@
         z-index: 3;
     }
 
+    body.scroll .header{
+      width: calc(100% - 6px);
+    }
+
     .header__content{
         display: flex;
         justify-content: space-between;
@@ -278,6 +282,9 @@
     @media (max-width: 768px){
         .header{
             top: 18px;
+        }
+        body.scroll .header{
+          width: calc(100%);
         }
         .header__content{
             height: 48px;

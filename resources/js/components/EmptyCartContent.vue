@@ -101,3 +101,43 @@ export default {
         background: var(--Btn-Hover-Red, #BE1522);
     }
 </style>
+
+<style scoped>
+    .order-content .empty-cart-content__wrapper{
+        width: 45%;
+        border-bottom: 1px solid var(--Color-Gray, #9E9E9E);
+        border-right: 1px solid var(--Color-Gray, #9E9E9E);
+        padding: 32px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        flex-grow: 1;
+        height: auto;
+    }
+</style>
+
+<style scoped>
+    @media (max-width: 1250px){
+        .order-content .empty-cart-content__wrapper{
+            width: 100%;
+            padding: 18px 12px;
+        }
+    }
+
+    @media (max-width: 332px){
+        .order-content .empty-cart-content__wrapper{
+            width: 100%;
+            padding: 18px 12px;
+        }
+
+        .order-content .empty-cart-content__wrapper .empty-cart-content__title{
+            font-size: 24px;
+            line-height: 24px;
+        }
+
+        .order-content .empty-cart-content__wrapper .empty-cart-content__text{
+            font-size: 14px;
+            line-height: 14px;
+        }
+    }
+</style>

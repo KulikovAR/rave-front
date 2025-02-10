@@ -3,6 +3,7 @@
         :style="{ 
             backgroundImage: `url('/images/restaurants/categories/paper.png'), url('${item.image}'), url('/images/restaurants/categories/noisy-bg.png')` 
         }"
+        @click="goToCatalog(item.slug)"
     >
         <div class="category-item__name">
             {{ item.name }}
@@ -72,6 +73,9 @@ export default {
         color: #000;
         text-transform: uppercase;
         margin-bottom: 8px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-height: 36.48px;
     }
 
     .category-item__description-wrapper{
@@ -144,7 +148,7 @@ export default {
             padding: 16px 14px;
         }
 
-        .category-item__name_{
+        .category-item__name{
             font-family: Vela Sans GX;
             font-size: 16px;
             font-weight: 600;
@@ -154,6 +158,7 @@ export default {
             text-underline-position: from-font;
             text-decoration-skip-ink: none;
             margin-bottom: 4px;
+            max-height: 18.24px;
         }
 
         .category-item__description{

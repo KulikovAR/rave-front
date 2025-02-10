@@ -82,7 +82,9 @@ export default {
     .order-page{
         padding-top: calc(65px + 2 * 24px);
         padding-bottom: 70px;
-        height: 100vh;
+        /* height: 100vh; */
+        height: auto;
+        min-height: 100vh;
     }
 </style>
 
