@@ -10,7 +10,8 @@
                         {{ product.name }}
                     </div>
                     <div class="product-item__content__energy-value">
-                        {{ product.calories }} Ккал, {{ product.weight }} г.
+                        
+                        <span v-if="product.calories > 0">{{ product.calories }} Ккал,</span> {{ product.weight }} г.
                     </div>
                     <div class="product-item__content__description">
                         {{ product.description }}
