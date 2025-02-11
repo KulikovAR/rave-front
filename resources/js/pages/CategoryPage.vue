@@ -70,10 +70,10 @@ export default {
         },
         initData() {
             if (!this.restaurants.length) {
-                this.fetchRestaurants(); // Загружаем рестораны из Vuex, если они ещё не загружены
+                this.fetchRestaurants();
             }
             if (!this.categories.length) {
-                this.fetchCategories(); // Загружаем категории из Vuex, если они ещё не загружены
+                this.fetchCategories();
             }
         },
         initCategoryList() {
@@ -87,6 +87,7 @@ export default {
     },
     mounted() {
         this.initData();
+        this.$store.dispatch('cart/validateCart');
     },
     watch: {
         '$route'(to, from) {

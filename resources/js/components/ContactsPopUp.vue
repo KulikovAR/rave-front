@@ -122,7 +122,6 @@ export default {
             return `https://rave-back.pisateli-studio.ru/storage/${imageName}`;
         },
         
-        // Новый метод для открытия карты
         openMap() {
             if (!this.restaurant || !this.restaurant.map_link) return;
 
@@ -137,7 +136,6 @@ export default {
             }
         },
 
-        // Метод для проверки устройства
         isMobile() {
             return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         }

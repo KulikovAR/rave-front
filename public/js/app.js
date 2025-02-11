@@ -22411,7 +22411,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     CartDeleteItemPopUp: _CartDeleteItemPopUp_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   props: {
-    restaurantSlug: String // Принимаем restaurantSlug
+    restaurantSlug: String
   },
   computed: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapGetters)("cart", ["getCart", "getTotalPrice"])), {}, {
     cart: function cart() {
@@ -22440,7 +22440,6 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       });
       this.$emit('itemRemovedFromCart');
     },
-    // Метод для обновления количества через input
     onQuantityInputChange: function onQuantityInputChange(event, itemId) {
       var newQuantity = parseInt(event.target.value, 10);
       if (isNaN(newQuantity) || newQuantity < 1) {
@@ -22450,7 +22449,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         return i.id === itemId;
       });
       if (item) {
-        var amount = newQuantity - item.quantity; // Разница, которую нужно применить
+        var amount = newQuantity - item.quantity;
         if (amount !== 0) {
           this.updateQuantity({
             restaurantId: this.restaurantSlug,
@@ -22519,7 +22518,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     var _this = this;
-    // Используем $nextTick, чтобы гарантировать, что элемент существует
     this.$nextTick(function () {
       var popUpBackground = document.querySelector('.cart-delete-item__pop-up__bg');
       if (popUpBackground) {
@@ -22528,7 +22526,6 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   beforeDestroy: function beforeDestroy() {
-    // Удаляем обработчик перед уничтожением компонента
     var popUpBackground = document.querySelector('.cart-delete-item__pop-up__bg');
     if (popUpBackground) {
       popUpBackground.removeEventListener('click', this.closePopUp);
@@ -22585,8 +22582,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         name: this.item.name,
         price: this.item.price,
         quantity: 1,
-        // Добавляем 1 товар по умолчанию
-        image: this.item.image || '',
+        image: this.item.image || this.getPlaceholder() || '',
         calories: this.item.calories,
         weight: this.item.weight,
         recommended_products: this.item.recommended_products
@@ -22595,6 +22591,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         restaurantId: restaurantId,
         item: cartItem
       });
+    },
+    getPlaceholder: function getPlaceholder() {
+      return this.$restaurantPlugs[this.restaurantSlug] || '/images/plugs/default.png';
     }
   })
 });
@@ -22694,8 +22693,6 @@ var BASE_URL = "https://rave-back.pisateli-studio.ru/storage/";
   },
   setup: function setup(props) {
     var store = (0,vuex__WEBPACK_IMPORTED_MODULE_2__.useStore)();
-
-    // Функция для получения полного пути к изображению
     var getFullImagePath = function getFullImagePath(imageName) {
       return "".concat(BASE_URL).concat(imageName);
     };
@@ -22708,7 +22705,7 @@ var BASE_URL = "https://rave-back.pisateli-studio.ru/storage/";
         return category.restaurant_id === currentRestaurant.id;
       }).map(function (category) {
         return _objectSpread(_objectSpread({}, category), {}, {
-          image: getFullImagePath(category.image) // Добавляем полный путь к картинке
+          image: getFullImagePath(category.image)
         });
       });
     });
@@ -22747,8 +22744,6 @@ __webpack_require__.r(__webpack_exports__);
     var store = (0,vuex__WEBPACK_IMPORTED_MODULE_1__.useStore)();
     var route = (0,vue_router__WEBPACK_IMPORTED_MODULE_2__.useRoute)();
     var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_2__.useRouter)();
-
-    // Получение данных из Vuex
     var categories = (0,vue__WEBPACK_IMPORTED_MODULE_0__.computed)(function () {
       var currentRestaurant = store.state.restaurant.restaurants.find(function (r) {
         return r.slug === props.restaurantSlug;
@@ -22759,20 +22754,15 @@ __webpack_require__.r(__webpack_exports__);
       });
     });
     var hasNewItems = (0,vue__WEBPACK_IMPORTED_MODULE_0__.computed)(function () {
-      // Находим текущий ресторан
       var currentRestaurant = store.state.restaurant.restaurants.find(function (r) {
         return r.slug === props.restaurantSlug;
       });
       if (!currentRestaurant) return false;
-
-      // Фильтруем категории, принадлежащие текущему ресторану
       var restaurantCategories = store.state.restaurant.categories.filter(function (category) {
         return category.restaurant_id === currentRestaurant.id;
       }).map(function (category) {
         return category.id;
-      }); // Берём только ID категорий
-
-      // Проверяем, есть ли новые продукты в этих категориях
+      });
       return store.state.restaurant.products.some(function (product) {
         return product["new"] === 1 && restaurantCategories.includes(product.category_id);
       });
@@ -22794,8 +22784,6 @@ __webpack_require__.r(__webpack_exports__);
     var isActiveTab = function isActiveTab(tabSlug) {
       return currentTab.value === tabSlug;
     };
-
-    // Методы навигации
     var goToCatalog = function goToCatalog(categorySlug) {
       router.push({
         name: categorySlug === "new" ? "newCatalog" : "catalog",
@@ -22813,13 +22801,9 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     };
-
-    // DOM-рефы
     var listWrapper = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(null);
     var logo = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(null);
     var scrollContainer = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(null);
-
-    // Обработчик прокрутки окна
     var handleScroll = function handleScroll() {
       if (listWrapper.value && logo.value) {
         var background = window.scrollY > 10 ? "#FFFFFC" : "transparent";
@@ -22827,8 +22811,6 @@ __webpack_require__.r(__webpack_exports__);
         logo.value.style.background = background;
       }
     };
-
-    // Горизонтальная прокрутка мышью и перетаскивание
     var handleMouseDown = function handleMouseDown(e) {
       var slider = scrollContainer.value;
       if (!slider) return;
@@ -23011,7 +22993,6 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     getFullImagePath: function getFullImagePath(imageName) {
       return "https://rave-back.pisateli-studio.ru/storage/".concat(imageName);
     },
-    // Новый метод для открытия карты
     openMap: function openMap() {
       if (!this.restaurant || !this.restaurant.map_link) return;
       var yandexLink = this.restaurant.map_link;
@@ -23023,7 +23004,6 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         window.open(yandexLink, "_blank");
       }
     },
-    // Метод для проверки устройства
     isMobile: function isMobile() {
       return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     }
@@ -23167,13 +23147,18 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       isMenuOpen: false
     };
   },
-  computed: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapGetters)("cart", ["getCart"])), {}, {
+  computed: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapGetters)("cart", ["getCart", "getTotalPrice"])), {}, {
     restaurantCartCount: function restaurantCartCount() {
       return (this.getCart(this.restaurantSlug) || []).reduce(function (sum, item) {
         return sum + item.quantity;
       }, 0);
     },
-    // Проверяем, находимся ли мы на странице 404
+    cartTotalPrice: function cartTotalPrice() {
+      return this.getTotalPrice(this.restaurantSlug);
+    },
+    shouldShowCart: function shouldShowCart() {
+      return this.restaurantCartCount > 0 && this.cartTotalPrice > 0;
+    },
     is404Page: function is404Page() {
       return this.$route.name === '404';
     }
@@ -23226,7 +23211,6 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     banner: {
       immediate: true,
-      // Запускаем сразу при монтировании
       handler: function handler() {
         this.checkBanner();
       }
@@ -23317,7 +23301,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       return this.$store.getters['restaurant/restaurants'];
     },
     hasSeenPopUp: function hasSeenPopUp() {
-      return this.$store.getters['ui/hasSeenPopUp'](this.restaurantSlug); // Проверяем флаг для конкретного ресторана
+      return this.$store.getters['ui/hasSeenPopUp'](this.restaurantSlug);
     },
     isClosed: function isClosed() {
       var _this = this;
@@ -23330,7 +23314,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   methods: {
     closePopUp: function closePopUp() {
-      this.$store.dispatch('ui/markPopUpAsSeen', this.restaurantSlug); // Сохраняем флаг ТОЛЬКО для этого ресторана
+      this.$store.dispatch('ui/markPopUpAsSeen', this.restaurantSlug);
     },
     initScheduleData: function initScheduleData() {
       var _this2 = this;
@@ -23553,16 +23537,19 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       this.form.district = district;
       this.openDropdown = null;
     },
-    validatePhone: function validatePhone() {
-      if (!/^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/.test(this.form.customer_phone)) {
-        return false;
+    fixPhoneInput: function fixPhoneInput() {
+      if (this.form.customer_phone.length > 18) {
+        this.form.customer_phone = this.form.customer_phone.slice(0, 18);
       }
-      return true;
+    },
+    validatePhone: function validatePhone() {
+      var cleanedPhone = this.form.customer_phone.replace(/\D/g, '');
+      return cleanedPhone.length === 11;
     },
     submitOrder: function submitOrder() {
       var _this = this;
       if (!this.validateForm()) return;
-      var cleanedPhone = this.form.customer_phone.replace(/\D/g, '');
+      var cleanedPhone = this.form.customer_phone.replace(/[^\d]/g, '').trim();
       var orderData = {
         customer_name: this.form.customer_name,
         customer_phone: cleanedPhone,
@@ -23582,9 +23569,10 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         })
       };
       _api__WEBPACK_IMPORTED_MODULE_4__["default"].post('/orders', orderData).then(function (res) {
-        console.log('Заказ успешно создан:', res.data);
-        _this.$refs.OrderSuccessPopUp.showPopUp();
-        _this.clearCartForRestaurant(_this.restaurantSlug);
+        if (res.data.ok === true) {
+          _this.$refs.OrderSuccessPopUp.showPopUp();
+          _this.clearCartForRestaurant(_this.restaurantSlug);
+        }
       })["catch"](function (error) {
         var _error$response;
         console.error('Ошибка при оформлении заказа:', ((_error$response = error.response) === null || _error$response === void 0 ? void 0 : _error$response.data) || error);
@@ -23593,11 +23581,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     validateForm: function validateForm() {
       var _this2 = this;
-      console.log('validating');
       this.phoneError = false;
       var hasError = false;
-
-      // Обнуляем ошибки перед проверкой
       this.formErrors = {
         customer_name: false,
         customer_phone: false,
@@ -23709,16 +23694,14 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   name: 'ProductItem',
   props: {
     product: Object,
-    // Пропс для передачи данных о продукте
     restaurantSlug: String
   },
   data: function data() {
     return {
-      quantity: 1 // Количество по умолчанию
+      quantity: 1
     };
   },
   methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapActions)("cart", ["addToCart"])), {}, {
-    // Vuex экшен для добавления в корзину
     increaseQuantity: function increaseQuantity() {
       this.quantity++;
     },
@@ -23734,7 +23717,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         name: this.product.name,
         price: this.product.price,
         quantity: this.quantity,
-        image: this.product.image,
+        image: this.product.image || this.getPlaceholder() || '',
         calories: this.product.calories,
         weight: this.product.weight,
         recommended_products: this.product.recommended_products
@@ -23743,14 +23726,16 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         restaurantId: restaurantId,
         item: cartItem
       });
-      this.quantity = 1; // Сбрасываем количество после добавления
+      this.quantity = 1;
     },
     formatPrice: function formatPrice(price) {
       return Math.floor(parseFloat(price));
     },
-    // Метод для формирования полного пути к изображению
     getFullImagePath: function getFullImagePath(imageName) {
       return "https://rave-back.pisateli-studio.ru/storage/".concat(imageName);
+    },
+    getPlaceholder: function getPlaceholder() {
+      return this.$restaurantPlugs[this.restaurantSlug] || '/images/plugs/default.png';
     }
   })
 });
@@ -23794,6 +23779,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         }
       });
     },
+    getPlaceholder: function getPlaceholder() {
+      return this.$restaurantPlugs[this.restaurantSlug] || '/images/plugs/default.png';
+    },
     handleAddToCart: function handleAddToCart() {
       var restaurantId = this.restaurantSlug;
       var cartItem = {
@@ -23801,8 +23789,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         name: this.item.name,
         price: this.item.price,
         quantity: 1,
-        // Добавляем 1 товар по умолчанию
-        image: this.item.image || '',
+        image: this.item.image || this.getPlaceholder() || '',
         calories: this.item.calories,
         weight: this.item.weight,
         recommended_products: this.item.recommended_products
@@ -23863,7 +23850,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       isMobile: false,
       swiperInstance: null,
-      slidesPerView: 4 // Значение по умолчанию, обновляется динамически
+      slidesPerView: 4
     };
   },
   computed: {
@@ -24011,11 +23998,10 @@ var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
     return {
       restaurantSlug: this.$route.params.restaurantSlug,
       breadCrumbs: [],
-      isProductsLoaded: false // Флаг для отслеживания загрузки продуктов
+      isProductsLoaded: false
     };
   },
   computed: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_7__.mapGetters)("cart", ["getCart", "getTotalPrice"])), {}, {
-    // Используем геттер из Vuex для получения рекомендованных продуктов
     recommendedProductsList: function recommendedProductsList() {
       return this.$store.getters['restaurant/recommendedProducts'](this.restaurantSlug);
     },
@@ -24046,7 +24032,6 @@ var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
       }];
     },
     handleCartState: function handleCartState() {
-      // Пересчитываем рекомендованные товары после изменений в корзине
       this.updateRecommendedProducts();
     },
     loadProductsIfNeeded: function loadProductsIfNeeded() {
@@ -24068,6 +24053,7 @@ var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
   mounted: function mounted() {
     this.initData();
     this.loadProductsIfNeeded();
+    this.$store.dispatch('cart/validateCart');
   }
 });
 
@@ -24155,8 +24141,6 @@ var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
           });
         }
       }
-
-      // Прокидываем картинку через product.media[0].path
       return products.map(function (product) {
         var _product$media;
         return _objectSpread(_objectSpread({}, product), {}, {
@@ -24180,6 +24164,7 @@ var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
   }),
   mounted: function mounted() {
     this.initData();
+    this.$store.dispatch('cart/validateCart');
   },
   watch: {
     '$route': function $route(to, from) {
@@ -24260,10 +24245,10 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     initData: function initData() {
       if (!this.restaurants.length) {
-        this.fetchRestaurants(); // Загружаем рестораны из Vuex, если они ещё не загружены
+        this.fetchRestaurants();
       }
       if (!this.categories.length) {
-        this.fetchCategories(); // Загружаем категории из Vuex, если они ещё не загружены
+        this.fetchCategories();
       }
     },
     initCategoryList: function initCategoryList() {
@@ -24277,6 +24262,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   }),
   mounted: function mounted() {
     this.initData();
+    this.$store.dispatch('cart/validateCart');
   },
   watch: {
     '$route': function $route(to, from) {
@@ -24326,7 +24312,6 @@ var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
     MainBannerPopUp: _components_MainBannerPopUp_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   computed: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_4__.mapState)('restaurant', ['restaurants', 'banner'])), {}, {
-    // Вычисляемое свойство для баннера
     bannerWithImagePath: function bannerWithImagePath() {
       if (this.banner && this.banner.image_path) {
         return _objectSpread(_objectSpread({}, this.banner), {}, {
@@ -24357,10 +24342,10 @@ var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
   }),
   mounted: function mounted() {
     if (!this.restaurants.length) {
-      this.fetchRestaurants(); // Загружаем рестораны из Vuex, если они ещё не загружены
+      this.fetchRestaurants();
     }
     if (!this.banner) {
-      this.fetchBanner(); // Загружаем баннер, если его нет
+      this.fetchBanner();
     }
   }
 });
@@ -24469,6 +24454,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     this.initData();
+    this.$store.dispatch('cart/validateCart');
   }
 });
 
@@ -24522,26 +24508,22 @@ var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
       categorySlug: this.$route.params.categorySlug,
       productSlug: this.$route.params.productSlug,
       breadCrumbs: [],
-      product: {} // Данные о продукте
+      product: {}
     };
   },
   computed: _objectSpread(_objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_6__.mapState)('restaurant', ['products'])), (0,vuex__WEBPACK_IMPORTED_MODULE_6__.mapGetters)('restaurant', ['getProductBySlug'])), {}, {
-    // Получаем продукт из геттера
     productData: function productData() {
       var product = this.getProductBySlug(this.productSlug);
-      console.log('productData computed:', product); // Логирование
       return product;
     }
   }),
   watch: {
-    // Слежение за изменением slug продукта и загрузка данных, если они изменяются
     '$route.params.productSlug': 'loadProductData'
   },
   methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_6__.mapActions)('restaurant', ['fetchProducts'])), {}, {
     showContactsPopUp: function showContactsPopUp() {
       this.$refs.ContactsPopUp.showPopUp();
     },
-    // Получаем полный путь к изображению
     getFullImagePath: function getFullImagePath(imageName) {
       return "".concat(BASE_URL).concat(imageName);
     },
@@ -24565,16 +24547,15 @@ var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
         }];
       }
     },
-    // Загружаем продукт, если его нет в хранилище
     loadProductData: function loadProductData() {
       var _this = this;
       if (!this.productData) {
-        console.log('Продукт не найден в хранилище, загружаем...');
         this.$store.dispatch('restaurant/fetchProducts').then(function () {
           var loadedProduct = _this.productData;
           if (loadedProduct) {
+            var _loadedProduct$media;
             _this.product = _objectSpread(_objectSpread({}, loadedProduct), {}, {
-              image: _this.getFullImagePath(loadedProduct.media[0].path),
+              image: (_loadedProduct$media = loadedProduct.media) !== null && _loadedProduct$media !== void 0 && (_loadedProduct$media = _loadedProduct$media[0]) !== null && _loadedProduct$media !== void 0 && _loadedProduct$media.path ? _this.getFullImagePath(loadedProduct.media[0].path) : null,
               recommended_products: loadedProduct.recommended_products.map(function (product) {
                 var _product$media;
                 return _objectSpread(_objectSpread({}, product), {}, {
@@ -24588,9 +24569,9 @@ var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
           console.error('Ошибка при загрузке продукта:', error);
         });
       } else {
-        // Если продукт уже найден, просто инициализируем breadcrumbs
+        var _this$productData$med;
         this.product = _objectSpread(_objectSpread({}, this.productData), {}, {
-          image: this.getFullImagePath(this.productData.media[0].path),
+          image: (_this$productData$med = this.productData.media) !== null && _this$productData$med !== void 0 && (_this$productData$med = _this$productData$med[0]) !== null && _this$productData$med !== void 0 && _this$productData$med.path ? this.getFullImagePath(this.productData.media[0].path) : null,
           recommended_products: this.productData.recommended_products.map(function (product) {
             var _product$media2;
             return _objectSpread(_objectSpread({}, product), {}, {
@@ -24604,18 +24585,16 @@ var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
   }),
   mounted: function mounted() {
     var _this2 = this;
-    // При загрузке страницы проверяем, есть ли данные о продукте в хранилище
     if (this.products.length === 0) {
-      console.log('Продукты не загружены, загружаем...');
       this.$store.dispatch('restaurant/fetchProducts').then(function () {
-        _this2.loadProductData(); // После загрузки данных, загружаем продукт
+        _this2.loadProductData();
       })["catch"](function (error) {
         console.error('Ошибка при загрузке продуктов:', error);
       });
     } else {
-      // Если продукты уже загружены, сразу пытаемся найти продукт
       this.loadProductData();
     }
+    this.$store.dispatch('cart/validateCart');
   }
 });
 
@@ -24686,7 +24665,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       "class": "bread-crumbs__item"
     }, {
       "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-        return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" :to=\"{ path:item.path }\"  "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.textname), 1 /* TEXT */)];
+        return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.textname), 1 /* TEXT */)];
       }),
       _: 2 /* DYNAMIC */
     }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["to"]);
@@ -24912,7 +24891,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }])
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     "class": "catalog-item__photo-img",
-    src: $props.item.image,
+    src: $props.item.image || $options.getPlaceholder(),
     alt: "photo"
   }, null, 8 /* PROPS */, _hoisted_2), _cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "catelog-item__new-flag"
@@ -25082,11 +25061,11 @@ var _hoisted_7 = {
 };
 var _hoisted_8 = ["onClick"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Логотип ресторана "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     "class": "current-restaurant__logo-img",
     src: $setup.currentRestaurantLogo,
     alt: $setup.currentRestaurantName
-  }, null, 8 /* PROPS */, _hoisted_5)], 512 /* NEED_PATCH */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Список категорий с горизонтальной прокруткой "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [$setup.hasNewItems ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+  }, null, 8 /* PROPS */, _hoisted_5)], 512 /* NEED_PATCH */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [$setup.hasNewItems ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
     key: 0,
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["category-tabs__item new", {
       'current': $setup.isActiveTab('new')
@@ -25379,13 +25358,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return _cache[6] || (_cache[6] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" На Главную ")]);
     }),
     _: 1 /* STABLE */
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Условное отображение для \"Контактов\" "), !$options.is404Page ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+  }), !$options.is404Page ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
     key: 0,
     "class": "header__link",
     onClick: _cache[0] || (_cache[0] = function () {
       return $options.showContactsPopUp && $options.showContactsPopUp.apply($options, arguments);
     })
-  }, " Контакты ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Условное отображение для корзины "), !$options.is404Page ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
+  }, " Контакты ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.is404Page ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_router_link, {
     key: 1,
     to: {
       name: 'cart',
@@ -25394,7 +25373,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }
     },
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["header__link cart mobile", {
-      active: $options.restaurantCartCount > 0
+      active: $options.shouldShowCart
     }]),
     onClick: _cache[1] || (_cache[1] = function ($event) {
       return $options.closeMenu();
@@ -25409,7 +25388,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         "class": "header__cart active",
         src: "/images/cart/cart-active.svg",
         alt: "Корзина"
-      }, null, -1 /* HOISTED */)), $options.restaurantCartCount > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.restaurantCartCount), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
+      }, null, -1 /* HOISTED */)), $options.shouldShowCart ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.restaurantCartCount), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
     }),
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["to", "class"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
@@ -25815,7 +25794,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_EmptyCartContent = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("EmptyCartContent");
   var _component_OrderSuccessPopUp = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("OrderSuccessPopUp");
   var _directive_imask = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveDirective)("imask");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [_cache[13] || (_cache[13] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [_cache[14] || (_cache[14] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "order-content__title"
   }, " Оформление заказа ", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["order-form__type-button", {
@@ -25847,8 +25826,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
       return $data.form.customer_phone = $event;
     }),
-    placeholder: "+7 (___) ___-__"
-  }, null, 2 /* CLASS */), [[_directive_imask, {
+    placeholder: "+7 (___) ___-__",
+    onInput: _cache[4] || (_cache[4] = function () {
+      return $options.fixPhoneInput && $options.fixPhoneInput.apply($options, arguments);
+    })
+  }, null, 34 /* CLASS, NEED_HYDRATION */), [[_directive_imask, {
     mask: '+7 (000) 000-00-00'
   }], [vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.customer_phone]])]), $data.deliveryType === 'Доставка' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     key: 0
@@ -25858,7 +25840,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }])
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "custom-dropdown",
-    onClick: _cache[4] || (_cache[4] = function ($event) {
+    onClick: _cache[5] || (_cache[5] = function ($event) {
       return $options.toggleDropdown('city');
     })
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.city || 'Выберите город') + " ", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
@@ -25884,7 +25866,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["custom-dropdown", {
       disabled: !$data.form.city
     }]),
-    onClick: _cache[5] || (_cache[5] = function ($event) {
+    onClick: _cache[6] || (_cache[6] = function ($event) {
       return $options.toggleDropdown('district');
     })
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.district || 'Выберите район') + " ", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
@@ -25906,7 +25888,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       error: $data.formErrors.street
     }]),
     type: "text",
-    "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
+    "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
       return $data.form.street = $event;
     }),
     placeholder: "Улица"
@@ -25915,31 +25897,31 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       error: $data.formErrors.house
     }]),
     type: "text",
-    "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
+    "onUpdate:modelValue": _cache[8] || (_cache[8] = function ($event) {
       return $data.form.house = $event;
     }),
     placeholder: "Дом"
   }, null, 2 /* CLASS */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.house]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "class": "order-form__input",
     type: "text",
-    "onUpdate:modelValue": _cache[8] || (_cache[8] = function ($event) {
+    "onUpdate:modelValue": _cache[9] || (_cache[9] = function ($event) {
       return $data.form.entrance = $event;
     }),
     placeholder: "Подъезд"
   }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.entrance]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "class": "order-form__input",
     type: "text",
-    "onUpdate:modelValue": _cache[9] || (_cache[9] = function ($event) {
+    "onUpdate:modelValue": _cache[10] || (_cache[10] = function ($event) {
       return $data.form.apartment = $event;
     }),
     placeholder: "Квартира"
   }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.apartment]])])], 64 /* STABLE_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
     "class": "order-form__input",
-    "onUpdate:modelValue": _cache[10] || (_cache[10] = function ($event) {
+    "onUpdate:modelValue": _cache[11] || (_cache[11] = function ($event) {
       return $data.form.comment = $event;
     }),
     placeholder: "Комментарий"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.comment]])])])])]), $options.cart.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_19, [_cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.comment]])])])])]), $options.cart.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_19, [_cache[16] || (_cache[16] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "order-content__title"
   }, " Ваш заказ ", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_CartDeleteItemPopUp, {
     ref: "CartDeleteItemPopUp",
@@ -25962,20 +25944,20 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         return $options.deleteCartItem(item);
       }
     }, null, 8 /* PROPS */, _hoisted_28)])]);
-  }), 128 /* KEYED_FRAGMENT */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_30, [_cache[14] || (_cache[14] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }), 128 /* KEYED_FRAGMENT */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_30, [_cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "cart-total__title"
   }, " Итого: ", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_31, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.totalPrice) + " р. ", 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "cart-order-btn",
-    onClick: _cache[11] || (_cache[11] = function ($event) {
+    onClick: _cache[12] || (_cache[12] = function ($event) {
       return $options.submitOrder();
     })
   }, " Оформить заказ ")])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_EmptyCartContent, {
     key: 1
-  }))]), $options.cart.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_33, [_cache[16] || (_cache[16] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }))]), $options.cart.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_33, [_cache[17] || (_cache[17] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "cart-total__title"
   }, " Итого: ", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_34, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.totalPrice) + " р. ", 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "cart-order-btn",
-    onClick: _cache[12] || (_cache[12] = function () {
+    onClick: _cache[13] || (_cache[13] = function () {
       return $options.submitOrder && $options.submitOrder.apply($options, arguments);
     })
   }, " Оформить заказ ")])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_OrderSuccessPopUp, {
@@ -26081,7 +26063,7 @@ var _hoisted_12 = {
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     "class": "product-item__photo-img",
-    src: $props.product.image,
+    src: $props.product.image || $options.getPlaceholder(),
     alt: ""
   }, null, 8 /* PROPS */, _hoisted_5)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.product.name), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.product.calories) + " Ккал, " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.product.weight) + " г. ", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.product.description), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.formatPrice($props.product.price)) + " р. ", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "product-item__quantity-button minus",
@@ -26146,7 +26128,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }])
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     "class": "catalog-item__photo-img",
-    src: $props.item.image,
+    src: $props.item.image || $options.getPlaceholder(),
     alt: "photo"
   }, null, 8 /* PROPS */, _hoisted_2), _cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "catelog-item__new-flag"
@@ -26202,7 +26184,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_swiper = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("swiper");
   return $props.products && $props.products.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [_cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "recommended-products__title"
-  }, " С этим берут ", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Показываем стрелки только если хватает товаров для прокрутки "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  }, " С этим берут ", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     "class": "recommended-products__slider-btn prev",
     src: "/images/slider/prev.svg",
     alt: "Назад",
@@ -26713,7 +26695,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-(0,vue__WEBPACK_IMPORTED_MODULE_0__.createApp)(_App_vue__WEBPACK_IMPORTED_MODULE_1__["default"]).use(_router__WEBPACK_IMPORTED_MODULE_2__["default"]).use(_store__WEBPACK_IMPORTED_MODULE_3__["default"]).directive('imask', vue_imask__WEBPACK_IMPORTED_MODULE_4__.IMaskDirective).mount("#app");
+var app = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createApp)(_App_vue__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+// Добавление глобальных данных
+app.config.globalProperties.$restaurantPlugs = {
+  'rave-burger': '/images/plugs/rave-burger.png',
+  'rave-bistro': '/images/plugs/rave-bistro.png',
+  'rave-sushi': '/images/plugs/rave-sushi.png'
+};
+app.use(_router__WEBPACK_IMPORTED_MODULE_2__["default"]).use(_store__WEBPACK_IMPORTED_MODULE_3__["default"]).directive('imask', vue_imask__WEBPACK_IMPORTED_MODULE_4__.IMaskDirective).mount("#app");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 /***/ }),
@@ -26846,6 +26836,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -26939,30 +26932,87 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         // Обновляем рекомендованные товары для данного ресторана
         this.dispatch('restaurant/updateRecommendedProducts', restaurantSlug);
       }
+    },
+    UPDATE_CART: function UPDATE_CART(state, _ref4) {
+      var restaurantId = _ref4.restaurantId,
+        updatedCart = _ref4.updatedCart;
+      state.carts[restaurantId] = updatedCart;
+      state.carts = _objectSpread({}, state.carts);
     }
   },
   actions: {
-    addToCart: function addToCart(_ref4, payload) {
-      var commit = _ref4.commit;
+    addToCart: function addToCart(_ref5, payload) {
+      var commit = _ref5.commit;
       commit('ADD_TO_CART', payload);
     },
-    removeItem: function removeItem(_ref5, payload) {
-      var commit = _ref5.commit;
+    removeItem: function removeItem(_ref6, payload) {
+      var commit = _ref6.commit;
       commit('REMOVE_ITEM', payload);
     },
-    clearCart: function clearCart(_ref6, restaurantId) {
-      var commit = _ref6.commit;
+    clearCart: function clearCart(_ref7, restaurantId) {
+      var commit = _ref7.commit;
       commit('CLEAR_CART', restaurantId);
     },
     // Действие для обновления количества товара в корзине
-    updateQuantity: function updateQuantity(_ref7, payload) {
-      var commit = _ref7.commit;
+    updateQuantity: function updateQuantity(_ref8, payload) {
+      var commit = _ref8.commit;
       commit('UPDATE_QUANTITY', payload);
     },
     // Действие для очистки корзины по ресторану
-    clearCartForRestaurant: function clearCartForRestaurant(_ref8, restaurantSlug) {
-      var commit = _ref8.commit;
+    clearCartForRestaurant: function clearCartForRestaurant(_ref9, restaurantSlug) {
+      var commit = _ref9.commit;
       commit('CLEAR_CART_FOR_RESTAURANT', restaurantSlug);
+    },
+    validateCart: function validateCart(_ref10) {
+      var _this = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+        var commit, state, rootState, validProductIds, updated, restaurantId, filteredCart;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              commit = _ref10.commit, state = _ref10.state, rootState = _ref10.rootState;
+              _context.prev = 1;
+              if (rootState.restaurant.products.length) {
+                _context.next = 5;
+                break;
+              }
+              _context.next = 5;
+              return _this.dispatch('restaurant/fetchProducts');
+            case 5:
+              // Получаем все ID актуальных товаров из БД
+              validProductIds = new Set(rootState.restaurant.products.map(function (p) {
+                return p.id;
+              })); // Проверяем все корзины
+              updated = false;
+              for (restaurantId in state.carts) {
+                filteredCart = state.carts[restaurantId].filter(function (item) {
+                  return validProductIds.has(item.id);
+                }); // Если были удалены несуществующие товары, обновляем корзину
+                if (filteredCart.length !== state.carts[restaurantId].length) {
+                  commit('UPDATE_CART', {
+                    restaurantId: restaurantId,
+                    updatedCart: filteredCart
+                  });
+                  updated = true;
+                }
+              }
+
+              // Если корзина изменилась — обновляем localStorage
+              if (updated) {
+                localStorage.setItem('multiCart', JSON.stringify(state.carts));
+              }
+              _context.next = 14;
+              break;
+            case 11:
+              _context.prev = 11;
+              _context.t0 = _context["catch"](1);
+              console.error('Ошибка при валидации корзины:', _context.t0);
+            case 14:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee, null, [[1, 11]]);
+      }))();
     }
   }
 });
@@ -27411,7 +27461,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.cart__wrapper[data-v-b7f93bea]{\r\n        padding-top: 44px;\r\n        margin-bottom: 24px;\n}\n.cart[data-v-b7f93bea]{\r\n        display: flex;\r\n        flex-direction: column;\r\n        align-items: flex-end;\n}\n.cart__list[data-v-b7f93bea]{\r\n        width: 100%;\r\n        display: flex;\r\n        flex-direction: column;\r\n        border-left: 1px solid #9E9E9E;\r\n        border-top: 1px solid #9E9E9E;\r\n        margin-bottom: 48px;\n}\n.cart__item[data-v-b7f93bea]{\r\n        display: flex;\r\n        /* align-items: center; */\r\n        align-items: stretch;\r\n        border-right: 1px solid #9E9E9E;\r\n        border-bottom: 1px solid #9E9E9E;\n}\n.cart__item__photo[data-v-b7f93bea]{\r\n        height: auto;\r\n        width: 12%;\r\n        display: flex;\r\n        align-items: flex-end;\r\n        overflow: hidden;\r\n        margin-right: 56px;\r\n        align-self: stretch;\n}\n.cart__item__photo-img[data-v-b7f93bea]{\r\n        width: 100%;\r\n        height: 100%;\r\n        -o-object-fit: contain;\r\n           object-fit: contain; /* Сохраняет пропорции */\r\n        -o-object-position: left bottom;\r\n           object-position: left bottom; /* Прижимает к левому нижнему углу */\n}\n.cart__item__content[data-v-b7f93bea]{\r\n        position: relative;\r\n        width: 88%;\r\n        display: flex;\r\n        align-items: center;\r\n        padding: 32px;\n}\n.cart__item__info[data-v-b7f93bea]{\r\n        width: 50%;\r\n        display: flex;\r\n        flex-direction: column;\r\n        gap: 8px;\r\n        margin-right: 34px;\n}\n.cart__item__info-name[data-v-b7f93bea]{\r\n        font-family: Vela Sans GX;\r\n        font-size: 18px;\r\n        font-weight: 700;\r\n        line-height: 21.6px;\r\n        letter-spacing: -0.02em;\r\n        text-align: left;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        text-transform: uppercase;\r\n        color: var(--Btn-Black, #000000);\n}\n.cart__item__info-energy-value[data-v-b7f93bea]{\r\n        font-family: Vela Sans GX;\r\n        font-size: 12px;\r\n        font-weight: 500;\r\n        line-height: 14.4px;\r\n        letter-spacing: -0.03em;\r\n        text-align: left;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        color: var(--Color-Gray, #9E9E9E);\n}\n.cart__item__control[data-v-b7f93bea]{\r\n        width: 50%;\r\n        display: flex;\r\n        align-items: center;\r\n        justify-content: space-between;\n}\n.cart__item__quantity[data-v-b7f93bea]{\r\n        width: 165px;\r\n        height: 48px;\r\n        display: flex;\r\n        align-items: center;\r\n        background: #FFFFFF;\r\n        border-radius: 2px;\r\n        margin-right: 34px;\n}\n.cart__item__quantity[data-v-b7f93bea] *{\r\n        width: 33%;\r\n        height: 100%;\r\n        display: flex;\r\n        justify-content: center;\r\n        align-items: center;\r\n\r\n        font-family: Montserrat;\r\n        font-size: 24px;\r\n        font-weight: 400;\r\n        line-height: 31.5px;\r\n        text-align: center;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        color: #1E252C;\n}\n.cart__item__quantity-button[data-v-b7f93bea]{\r\n        cursor: pointer;\n}\n.cart__item__quantity-input[data-v-b7f93bea]{\r\n        font-family: Vela Sans GX;\r\n        font-size: 18px;\r\n        font-weight: 600;\r\n        line-height: 23.58px;\r\n        text-align: center;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        color: var(--Btn-Black, #000000);\r\n        border: none;\r\n        outline: none;\n}\n.cart__item__quantity-input[data-v-b7f93bea] {\r\n        -moz-appearance:textfield;\r\n        -webkit-appearance: textfield;\r\n                appearance: textfield;\n}\n.cart__item__quantity-input[data-v-b7f93bea]::-webkit-outer-spin-button,\r\n    .cart__item__quantity-input[data-v-b7f93bea]::-webkit-inner-spin-button {\r\n        -webkit-appearance: none;\n}\n.cart__item__price[data-v-b7f93bea]{\r\n        font-family: Vela Sans GX;\r\n        font-size: 24px;\r\n        font-weight: 800;\r\n        line-height: 24px;\r\n        letter-spacing: -0.03em;\r\n        text-align: center;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        text-transform: uppercase;\r\n        color: var(--Btn-Black, #000000);\n}\n.cart__item__cross[data-v-b7f93bea]{\r\n        width: 24px;\r\n        height: 24px;\r\n        cursor: pointer;\n}\n.cart__item__cross.mobile[data-v-b7f93bea]{\r\n        position: absolute;\r\n        width: 16px;\r\n        height: 16px;\r\n        top: 8px;\r\n        right: 8px;\r\n\r\n        display: none;\n}\n.cart-total-order[data-v-b7f93bea]{\r\n        display: flex;\r\n        flex-direction: column;\r\n        width: 370px;\n}\n.cart-total[data-v-b7f93bea]{\r\n        width: 100%;\r\n        display: flex;\r\n        justify-content: space-between;\r\n        align-items: center;\r\n        margin-bottom: 34px;\n}\n.cart-total__title[data-v-b7f93bea]{\r\n        font-family: Vela Sans GX;\r\n        font-size: 18px;\r\n        font-weight: 700;\r\n        line-height: 21.6px;\r\n        letter-spacing: -0.02em;\r\n        text-align: left;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        text-transform: uppercase;\r\n        color: var(--Btn-Black, #000000);\n}\n.cart-total__value[data-v-b7f93bea]{\r\n        font-family: Vela Sans GX;\r\n        font-size: 32px;\r\n        font-weight: 800;\r\n        line-height: 32px;\r\n        letter-spacing: -0.03em;\r\n        text-align: center;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        text-transform: uppercase;\r\n        color: var(--Btn-Black, #000000);\n}\n.cart-order-btn[data-v-b7f93bea]{\r\n        width: 100%;\r\n        height: 48px;\r\n        display: flex;\r\n        justify-content: center;\r\n        align-items: center;\r\n        background: var(--Btn-Black, #000000);\r\n        border-radius: 2px;\r\n        font-family: Vela Sans GX;\r\n        font-size: 14px;\r\n        font-weight: 600;\r\n        line-height: 20.3px;\r\n        text-align: left;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        color: var(--Color-White, #FFFFFC);\r\n        cursor: pointer;\n}\n.cart-order-btn[data-v-b7f93bea]:hover{\r\n        color: #FFFFFF;\r\n        background: var(--Btn-Hover-Red, #BE1522);\r\n        border: 1px solid var(--Btn-Hover-Red, #BE1522);\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.cart__wrapper[data-v-b7f93bea]{\r\n        padding-top: 44px;\r\n        margin-bottom: 24px;\n}\n.cart[data-v-b7f93bea]{\r\n        display: flex;\r\n        flex-direction: column;\r\n        align-items: flex-end;\n}\n.cart__list[data-v-b7f93bea]{\r\n        width: 100%;\r\n        display: flex;\r\n        flex-direction: column;\r\n        border-left: 1px solid #9E9E9E;\r\n        border-top: 1px solid #9E9E9E;\r\n        margin-bottom: 48px;\n}\n.cart__item[data-v-b7f93bea]{\r\n        display: flex;\r\n        /* align-items: center; */\r\n        align-items: stretch;\r\n        border-right: 1px solid #9E9E9E;\r\n        border-bottom: 1px solid #9E9E9E;\r\n        max-height: 114px;\n}\n.cart__item__photo[data-v-b7f93bea]{\r\n        height: auto;\r\n        width: 12%;\r\n        display: flex;\r\n        align-items: flex-end;\r\n        overflow: hidden;\r\n        margin-right: 56px;\r\n        align-self: stretch;\n}\n.cart__item__photo-img[data-v-b7f93bea]{\r\n        width: 100%;\r\n        height: 100%;\r\n        -o-object-fit: contain;\r\n           object-fit: contain; /* Сохраняет пропорции */\r\n        -o-object-position: left bottom;\r\n           object-position: left bottom; /* Прижимает к левому нижнему углу */\n}\n.cart__item__content[data-v-b7f93bea]{\r\n        position: relative;\r\n        width: 88%;\r\n        display: flex;\r\n        align-items: center;\r\n        padding: 32px;\n}\n.cart__item__info[data-v-b7f93bea]{\r\n        width: 50%;\r\n        display: flex;\r\n        flex-direction: column;\r\n        gap: 8px;\r\n        margin-right: 34px;\n}\n.cart__item__info-name[data-v-b7f93bea]{\r\n        font-family: Vela Sans GX;\r\n        font-size: 18px;\r\n        font-weight: 700;\r\n        line-height: 21.6px;\r\n        letter-spacing: -0.02em;\r\n        text-align: left;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        text-transform: uppercase;\r\n        color: var(--Btn-Black, #000000);\n}\n.cart__item__info-energy-value[data-v-b7f93bea]{\r\n        font-family: Vela Sans GX;\r\n        font-size: 12px;\r\n        font-weight: 500;\r\n        line-height: 14.4px;\r\n        letter-spacing: -0.03em;\r\n        text-align: left;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        color: var(--Color-Gray, #9E9E9E);\n}\n.cart__item__control[data-v-b7f93bea]{\r\n        width: 50%;\r\n        display: flex;\r\n        align-items: center;\r\n        justify-content: space-between;\n}\n.cart__item__quantity[data-v-b7f93bea]{\r\n        width: 165px;\r\n        height: 48px;\r\n        display: flex;\r\n        align-items: center;\r\n        background: #FFFFFF;\r\n        border-radius: 2px;\r\n        margin-right: 34px;\n}\n.cart__item__quantity[data-v-b7f93bea] *{\r\n        width: 33%;\r\n        height: 100%;\r\n        display: flex;\r\n        justify-content: center;\r\n        align-items: center;\r\n\r\n        font-family: Montserrat;\r\n        font-size: 24px;\r\n        font-weight: 400;\r\n        line-height: 31.5px;\r\n        text-align: center;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        color: #1E252C;\n}\n.cart__item__quantity-button[data-v-b7f93bea]{\r\n        cursor: pointer;\n}\n.cart__item__quantity-input[data-v-b7f93bea]{\r\n        font-family: Vela Sans GX;\r\n        font-size: 18px;\r\n        font-weight: 600;\r\n        line-height: 23.58px;\r\n        text-align: center;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        color: var(--Btn-Black, #000000);\r\n        border: none;\r\n        outline: none;\n}\n.cart__item__quantity-input[data-v-b7f93bea] {\r\n        -moz-appearance:textfield;\r\n        -webkit-appearance: textfield;\r\n                appearance: textfield;\n}\n.cart__item__quantity-input[data-v-b7f93bea]::-webkit-outer-spin-button,\r\n    .cart__item__quantity-input[data-v-b7f93bea]::-webkit-inner-spin-button {\r\n        -webkit-appearance: none;\n}\n.cart__item__price[data-v-b7f93bea]{\r\n        font-family: Vela Sans GX;\r\n        font-size: 24px;\r\n        font-weight: 800;\r\n        line-height: 24px;\r\n        letter-spacing: -0.03em;\r\n        text-align: center;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        text-transform: uppercase;\r\n        color: var(--Btn-Black, #000000);\n}\n.cart__item__cross[data-v-b7f93bea]{\r\n        width: 24px;\r\n        height: 24px;\r\n        cursor: pointer;\n}\n.cart__item__cross.mobile[data-v-b7f93bea]{\r\n        position: absolute;\r\n        width: 16px;\r\n        height: 16px;\r\n        top: 8px;\r\n        right: 8px;\r\n\r\n        display: none;\n}\n.cart-total-order[data-v-b7f93bea]{\r\n        display: flex;\r\n        flex-direction: column;\r\n        width: 370px;\n}\n.cart-total[data-v-b7f93bea]{\r\n        width: 100%;\r\n        display: flex;\r\n        justify-content: space-between;\r\n        align-items: center;\r\n        margin-bottom: 34px;\n}\n.cart-total__title[data-v-b7f93bea]{\r\n        font-family: Vela Sans GX;\r\n        font-size: 18px;\r\n        font-weight: 700;\r\n        line-height: 21.6px;\r\n        letter-spacing: -0.02em;\r\n        text-align: left;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        text-transform: uppercase;\r\n        color: var(--Btn-Black, #000000);\n}\n.cart-total__value[data-v-b7f93bea]{\r\n        font-family: Vela Sans GX;\r\n        font-size: 32px;\r\n        font-weight: 800;\r\n        line-height: 32px;\r\n        letter-spacing: -0.03em;\r\n        text-align: center;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        text-transform: uppercase;\r\n        color: var(--Btn-Black, #000000);\n}\n.cart-order-btn[data-v-b7f93bea]{\r\n        width: 100%;\r\n        height: 48px;\r\n        display: flex;\r\n        justify-content: center;\r\n        align-items: center;\r\n        background: var(--Btn-Black, #000000);\r\n        border-radius: 2px;\r\n        font-family: Vela Sans GX;\r\n        font-size: 14px;\r\n        font-weight: 600;\r\n        line-height: 20.3px;\r\n        text-align: left;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        color: var(--Color-White, #FFFFFC);\r\n        cursor: pointer;\n}\n.cart-order-btn[data-v-b7f93bea]:hover{\r\n        color: #FFFFFF;\r\n        background: var(--Btn-Hover-Red, #BE1522);\r\n        border: 1px solid var(--Btn-Hover-Red, #BE1522);\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -27435,7 +27485,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n@media (max-width: 1100px){\n.cart__item[data-v-b7f93bea]{\r\n            height: 110px;\n}\n.cart__item__photo[data-v-b7f93bea]{\r\n            margin-right: 8px;\r\n            max-width: 37%;\r\n            width: auto;\n}\n.cart__item__content[data-v-b7f93bea]{\r\n            flex-direction: column;\r\n            width: 63%;\r\n            padding: 8px;\r\n            align-items: flex-start;\r\n\r\n            height: 100%;\r\n            gap: 8px;\r\n            justify-content: space-between;\r\n            width: 100%;\n}\n.cart__item__info[data-v-b7f93bea]{\r\n            padding-right: 24px;\r\n            width: 100%;\r\n\r\n            margin: 0;\r\n            flex-grow: 1;\r\n            height: calc(100% - 33px - 8px* 2);\n}\n.cart__item__info-name[data-v-b7f93bea]{\r\n            flex-grow: 1;\r\n            overflow: hidden;\r\n            display: -webkit-box;\r\n            -webkit-box-orient: vertical;\r\n            -webkit-line-clamp: 1;\r\n            line-clamp: 1;\r\n            overflow: hidden;\r\n            text-overflow: ellipsis;\r\n            max-height: calc(21.6px* 1);\n}\n.cart__item__control[data-v-b7f93bea]{\r\n            width: 100%;\n}\n.cart__item__quantity[data-v-b7f93bea]{\r\n            height: 33px;\n}\n.cart__item__cross[data-v-b7f93bea]{\r\n            display: none;\n}\n.cart__item__cross.mobile[data-v-b7f93bea]{\r\n            display: block;\n}\n}\n@media (max-width: 768px){\n.cart__wrapper[data-v-b7f93bea]{\r\n            padding-top: 0;\n}\n.cart__item__quantity[data-v-b7f93bea]{\r\n            width: 94px;\r\n            height: 33px;\n}\n.cart__item__quantity-input[data-v-b7f93bea]{\r\n            font-family: Vela Sans GX;\r\n            font-size: 16px;\r\n            font-weight: 600;\r\n            line-height: 20.96px;\r\n            text-align: center;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\n}\n}\n@media (max-width: 500px){\n.cart__wrapper[data-v-b7f93bea]{\r\n            margin-bottom: 42px;\n}\n.cart__list[data-v-b7f93bea]{\r\n            margin-bottom: 18px;\n}\n.cart-total-order[data-v-b7f93bea]{\r\n            width: 100%;\n}\n.cart-total[data-v-b7f93bea]{\r\n            margin-bottom: 12px;\n}\n.cart-total__title[data-v-b7f93bea]{\r\n            font-family: Vela Sans GX;\r\n            font-size: 14px;\r\n            font-weight: 500;\r\n            line-height: 16.8px;\r\n            letter-spacing: -0.02em;\r\n            text-align: left;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\n}\n.cart-total__value[data-v-b7f93bea]{\r\n            font-family: Vela Sans GX;\r\n            font-size: 20px;\r\n            font-weight: 800;\r\n            line-height: 20px;\r\n            letter-spacing: -0.03em;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\n}\n.cart__item__info-name[data-v-b7f93bea]{\r\n            font-family: Vela Sans GX;\r\n            font-size: 12px;\r\n            font-weight: 700;\r\n            line-height: 14.4px;\r\n            letter-spacing: -0.02em;\r\n            text-align: left;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\r\n\r\n            -webkit-line-clamp: 2;\r\n            line-clamp: 2;\r\n            max-height: calc(14.4px* 2);\n}\n.cart__item__info-energy-value[data-v-b7f93bea]{\r\n            font-family: Vela Sans GX;\r\n            font-size: 12px;\r\n            font-weight: 500;\r\n            line-height: 14.4px;\r\n            letter-spacing: -0.03em;\r\n            text-align: left;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\n}\n.cart__item__price[data-v-b7f93bea]{\r\n            font-family: Vela Sans GX;\r\n            font-size: 14px;\r\n            font-weight: 700;\r\n            line-height: 14px;\r\n            letter-spacing: -0.03em;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\r\n            width: 81px;\r\n            text-align: end;\n}\n.cart__item__quantity[data-v-b7f93bea]{\r\n            margin-right: 8px;\n}\n}\n@media (max-width: 375px){\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n@media (max-width: 1100px){\n.cart__item[data-v-b7f93bea]{\r\n            height: 110px;\n}\n.cart__item__photo[data-v-b7f93bea]{\r\n            margin-right: 8px;\r\n            /* max-width: 37%; */\r\n            width: 100%;\r\n            max-width: 25%;\n}\n.cart__item__content[data-v-b7f93bea]{\r\n            flex-direction: column;\r\n            width: 63%;\r\n            padding: 8px;\r\n            align-items: flex-start;\r\n\r\n            height: 100%;\r\n            gap: 8px;\r\n            justify-content: space-between;\r\n            width: 100%;\n}\n.cart__item__info[data-v-b7f93bea]{\r\n            padding-right: 24px;\r\n            width: 100%;\r\n\r\n            margin: 0;\r\n            flex-grow: 1;\r\n            height: calc(100% - 33px - 8px* 2);\n}\n.cart__item__info-name[data-v-b7f93bea]{\r\n            flex-grow: 1;\r\n            overflow: hidden;\r\n            display: -webkit-box;\r\n            -webkit-box-orient: vertical;\r\n            -webkit-line-clamp: 1;\r\n            line-clamp: 1;\r\n            overflow: hidden;\r\n            text-overflow: ellipsis;\r\n            max-height: calc(21.6px* 1);\n}\n.cart__item__control[data-v-b7f93bea]{\r\n            width: 100%;\n}\n.cart__item__quantity[data-v-b7f93bea]{\r\n            height: 33px;\n}\n.cart__item__cross[data-v-b7f93bea]{\r\n            display: none;\n}\n.cart__item__cross.mobile[data-v-b7f93bea]{\r\n            display: block;\n}\n}\n@media (max-width: 768px){\n.cart__wrapper[data-v-b7f93bea]{\r\n            padding-top: 0;\n}\n.cart__item__quantity[data-v-b7f93bea]{\r\n            width: 94px;\r\n            height: 33px;\n}\n.cart__item__quantity-input[data-v-b7f93bea]{\r\n            font-family: Vela Sans GX;\r\n            font-size: 16px;\r\n            font-weight: 600;\r\n            line-height: 20.96px;\r\n            text-align: center;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\n}\n}\n@media (max-width: 500px){\n.cart__wrapper[data-v-b7f93bea]{\r\n            margin-bottom: 42px;\n}\n.cart__list[data-v-b7f93bea]{\r\n            margin-bottom: 18px;\n}\n.cart-total-order[data-v-b7f93bea]{\r\n            width: 100%;\n}\n.cart-total[data-v-b7f93bea]{\r\n            margin-bottom: 12px;\n}\n.cart-total__title[data-v-b7f93bea]{\r\n            font-family: Vela Sans GX;\r\n            font-size: 14px;\r\n            font-weight: 500;\r\n            line-height: 16.8px;\r\n            letter-spacing: -0.02em;\r\n            text-align: left;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\n}\n.cart-total__value[data-v-b7f93bea]{\r\n            font-family: Vela Sans GX;\r\n            font-size: 20px;\r\n            font-weight: 800;\r\n            line-height: 20px;\r\n            letter-spacing: -0.03em;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\n}\n.cart__item__info-name[data-v-b7f93bea]{\r\n            font-family: Vela Sans GX;\r\n            font-size: 12px;\r\n            font-weight: 700;\r\n            line-height: 14.4px;\r\n            letter-spacing: -0.02em;\r\n            text-align: left;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\r\n\r\n            -webkit-line-clamp: 2;\r\n            line-clamp: 2;\r\n            max-height: calc(14.4px* 2);\n}\n.cart__item__info-energy-value[data-v-b7f93bea]{\r\n            font-family: Vela Sans GX;\r\n            font-size: 12px;\r\n            font-weight: 500;\r\n            line-height: 14.4px;\r\n            letter-spacing: -0.03em;\r\n            text-align: left;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\n}\n.cart__item__price[data-v-b7f93bea]{\r\n            font-family: Vela Sans GX;\r\n            font-size: 14px;\r\n            font-weight: 700;\r\n            line-height: 14px;\r\n            letter-spacing: -0.03em;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\r\n            width: 81px;\r\n            text-align: end;\n}\n.cart__item__quantity[data-v-b7f93bea]{\r\n            margin-right: 8px;\n}\n}\n@media (max-width: 375px){\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -27627,7 +27677,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.category-item[data-v-197b1ec8]{\r\n        width: calc(50% - 24px/2);\r\n        height: 300px;\r\n        padding: 24px 28px;\r\n        border-radius: 2px;\r\n        display: flex;\r\n        flex-direction: column;\r\n\r\n        \r\n        background-size: cover, contain, cover;   \r\n        background-position: center, right bottom, center;\r\n        background-repeat: no-repeat, no-repeat, repeat;\n}\n.category-item[data-v-197b1ec8]:hover{\r\n        border: 1px solid var(--Btn-Hover-Red, #BE1522);\r\n        transition: 0.3s ease;\n}\n.category-item__name[data-v-197b1ec8]{\r\n        font-family: Vela Sans GX;\r\n        font-size: 32px;\r\n        font-weight: 600;\r\n        line-height: 36.48px;\r\n        letter-spacing: -0.05em;\r\n        text-align: left;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        color: #000;\r\n        text-transform: uppercase;\r\n        margin-bottom: 8px;\r\n        overflow: hidden;\r\n        text-overflow: ellipsis;\r\n        max-height: 36.48px;\n}\n.category-item__description-wrapper[data-v-197b1ec8]{\r\n        width: 100%;\r\n        display: flex;\r\n        flex-direction: column;\r\n        justify-content: space-between;\r\n        flex-grow: 1;\n}\n.category-item__description[data-v-197b1ec8]{\r\n        max-width: 55%;\r\n        font-family: Vela Sans GX;\r\n        font-size: 14px;\r\n        font-weight: 400;\r\n        line-height: 20.3px;\r\n        letter-spacing: -0.05em;\r\n        text-align: left;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        color: var(--Color-Dark-gray, #505050);\r\n        flex-grow: 1;\r\n\r\n        display: -webkit-box;\r\n        -webkit-box-orient: vertical;\r\n        -webkit-line-clamp: 7; /* Количество строк */\r\n        line-clamp: 7; /* Стандартная версия */\r\n        overflow: hidden;\r\n        text-overflow: ellipsis;\r\n        max-height: calc(20.3px * 7); /* 2 строки * высоту строки */\n}\n.category-item__link[data-v-197b1ec8]{\r\n        width: 160px;\r\n        height: 48px;\r\n        border-radius: 2px;\r\n        display: flex;\r\n        justify-content: center;\r\n        align-items: center;\r\n        background: var(--Btn-Black, #000000);\r\n\r\n        font-family: Vela Sans GX;\r\n        font-size: 14px;\r\n        font-weight: 600;\r\n        line-height: 20.3px;\r\n        text-align: center;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        color: var(--Color-White, #FFFFFC);\r\n\r\n        cursor: pointer;\n}\n.category-item__link[data-v-197b1ec8]:hover{\r\n        color: #FFFFFF;\r\n        background: var(--Btn-Hover-Red, #BE1522);\r\n        border: 1px solid var(--Btn-Hover-Red, #BE1522)\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.category-item[data-v-197b1ec8]{\r\n        width: calc(50% - 24px/2);\r\n        height: 300px;\r\n        padding: 24px 28px;\r\n        border-radius: 2px;\r\n        display: flex;\r\n        flex-direction: column;\r\n\r\n        \r\n        background-size: cover, auto 100%, cover;   \r\n        background-position: center, right bottom, center;\r\n        background-repeat: no-repeat, no-repeat, repeat;\n}\n.category-item[data-v-197b1ec8]:hover{\r\n        border: 1px solid var(--Btn-Hover-Red, #BE1522);\r\n        transition: 0.3s ease;\n}\n.category-item__name[data-v-197b1ec8]{\r\n        font-family: Vela Sans GX;\r\n        font-size: 32px;\r\n        font-weight: 600;\r\n        line-height: 36.48px;\r\n        letter-spacing: -0.05em;\r\n        text-align: left;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        color: #000;\r\n        text-transform: uppercase;\r\n        margin-bottom: 8px;\r\n        overflow: hidden;\r\n        text-overflow: ellipsis;\r\n        max-height: 36.48px;\n}\n.category-item__description-wrapper[data-v-197b1ec8]{\r\n        width: 100%;\r\n        display: flex;\r\n        flex-direction: column;\r\n        justify-content: space-between;\r\n        flex-grow: 1;\n}\n.category-item__description[data-v-197b1ec8]{\r\n        max-width: 55%;\r\n        font-family: Vela Sans GX;\r\n        font-size: 14px;\r\n        font-weight: 400;\r\n        line-height: 20.3px;\r\n        letter-spacing: -0.05em;\r\n        text-align: left;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        color: var(--Color-Dark-gray, #505050);\r\n        flex-grow: 1;\r\n\r\n        display: -webkit-box;\r\n        -webkit-box-orient: vertical;\r\n        -webkit-line-clamp: 7; /* Количество строк */\r\n        line-clamp: 7; /* Стандартная версия */\r\n        overflow: hidden;\r\n        text-overflow: ellipsis;\r\n        max-height: calc(20.3px * 7); /* 2 строки * высоту строки */\n}\n.category-item__link[data-v-197b1ec8]{\r\n        width: 160px;\r\n        height: 48px;\r\n        border-radius: 2px;\r\n        display: flex;\r\n        justify-content: center;\r\n        align-items: center;\r\n        background: var(--Btn-Black, #000000);\r\n\r\n        font-family: Vela Sans GX;\r\n        font-size: 14px;\r\n        font-weight: 600;\r\n        line-height: 20.3px;\r\n        text-align: center;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        color: var(--Color-White, #FFFFFC);\r\n\r\n        cursor: pointer;\n}\n.category-item__link[data-v-197b1ec8]:hover{\r\n        color: #FFFFFF;\r\n        background: var(--Btn-Hover-Red, #BE1522);\r\n        border: 1px solid var(--Btn-Hover-Red, #BE1522)\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -28251,7 +28301,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.not-found__content-wrapper[data-v-7f2ff06f]{\r\n        width: 100%;\r\n        height: 100%;\n}\n.not-found__content-wrapper .container[data-v-7f2ff06f]{\r\n        width: 100%;\r\n        height: 100%;\n}\n.not-found__content[data-v-7f2ff06f]{\r\n        width: 100%;\r\n        height: 100%;\r\n        display: flex;\r\n        flex-direction: column;\r\n        justify-content: center;\r\n        align-items: center;\n}\n.not-found__content__title[data-v-7f2ff06f]{\r\n        font-family: Montserrat;\r\n        font-size: 180px;\r\n        font-weight: 800;\r\n        line-height: 110px;\r\n        letter-spacing: 1px;\r\n        text-align: center;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        /* border: 2px solid var(--Btn-Black, #000000); */\r\n        margin-bottom: 30px;\r\n\r\n        color: transparent; /* Делаем текст прозрачным */\r\n        -webkit-text-stroke: 2px var(--Btn-Black, #000000); \r\n        \r\n        /* text-shadow: \r\n            -2px -2px 0 var(--Btn-Black, #000000),  \r\n            2px -2px 0 var(--Btn-Black, #000000),  \r\n            -2px 2px 0 var(--Btn-Black, #000000),  \r\n            2px 2px 0 var(--Btn-Black, #000000); */\n}\n.not-found__content__text[data-v-7f2ff06f]{\r\n        font-family: Vela Sans GX;\r\n        font-size: 12px;\r\n        font-weight: 500;\r\n        line-height: 40px;\r\n        letter-spacing: 1px;\r\n        text-align: center;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        text-transform: uppercase;\r\n        color: var(--Btn-Black, #000000);\r\n        margin-bottom: 30px;\n}\n.not-found__content__button[data-v-7f2ff06f]{\r\n        width: 178px;\r\n        height: 48px;\r\n        border-radius: 2px;\r\n        display: flex;\r\n        justify-content: center;\r\n        align-items: center;\r\n        background: var(--Btn-Black, #000000);\r\n\r\n        font-family: Vela Sans GX;\r\n        font-size: 14px;\r\n        font-weight: 600;\r\n        line-height: 20.3px;\r\n        text-align: left;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        color: var(--Color-White, #FFFFFC);\r\n\r\n        cursor: pointer;\n}\n.not-found__content__button[data-v-7f2ff06f]:hover{\r\n        color: #FFFFFF;\r\n        background: var(--Btn-Hover-Red, #BE1522);\r\n        border: 1px solid var(--Btn-Hover-Red, #BE1522);\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.not-found__content-wrapper[data-v-7f2ff06f]{\r\n        width: 100%;\r\n        height: 100%;\n}\n.not-found__content-wrapper .container[data-v-7f2ff06f]{\r\n        width: 100%;\r\n        height: 100%;\n}\n.not-found__content[data-v-7f2ff06f]{\r\n        width: 100%;\r\n        height: 100%;\r\n        display: flex;\r\n        flex-direction: column;\r\n        justify-content: center;\r\n        align-items: center;\n}\n.not-found__content__title[data-v-7f2ff06f]{\r\n        font-family: Montserrat;\r\n        font-size: 180px;\r\n        font-weight: 800;\r\n        line-height: 110px;\r\n        letter-spacing: 1px;\r\n        text-align: center;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n\r\n        margin-bottom: 30px;\r\n\r\n        color: transparent; \r\n        -webkit-text-stroke: 2px var(--Btn-Black, #000000);\n}\n.not-found__content__text[data-v-7f2ff06f]{\r\n        font-family: Vela Sans GX;\r\n        font-size: 12px;\r\n        font-weight: 500;\r\n        line-height: 40px;\r\n        letter-spacing: 1px;\r\n        text-align: center;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        text-transform: uppercase;\r\n        color: var(--Btn-Black, #000000);\r\n        margin-bottom: 30px;\n}\n.not-found__content__button[data-v-7f2ff06f]{\r\n        width: 178px;\r\n        height: 48px;\r\n        border-radius: 2px;\r\n        display: flex;\r\n        justify-content: center;\r\n        align-items: center;\r\n        background: var(--Btn-Black, #000000);\r\n\r\n        font-family: Vela Sans GX;\r\n        font-size: 14px;\r\n        font-weight: 600;\r\n        line-height: 20.3px;\r\n        text-align: left;\r\n        text-underline-position: from-font;\r\n        -webkit-text-decoration-skip-ink: none;\r\n                text-decoration-skip-ink: none;\r\n        color: var(--Color-White, #FFFFFC);\r\n\r\n        cursor: pointer;\n}\n.not-found__content__button[data-v-7f2ff06f]:hover{\r\n        color: #FFFFFF;\r\n        background: var(--Btn-Hover-Red, #BE1522);\r\n        border: 1px solid var(--Btn-Hover-Red, #BE1522);\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

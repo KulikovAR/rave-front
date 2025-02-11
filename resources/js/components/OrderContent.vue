@@ -39,6 +39,7 @@
                                     v-model="form.customer_phone"
                                     placeholder="+7 (___) ___-__"
                                     :class="{ error: phoneError }"
+                                    @input="fixPhoneInput"
                                 >
                             </div>
 
@@ -263,16 +264,19 @@ export default {
             this.form.district = district;
             this.openDropdown = null;
         },
-        validatePhone() {
-            if (!/^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/.test(this.form.customer_phone)) {
-                return false;
+        fixPhoneInput() {
+            if (this.form.customer_phone.length > 18) {
+                this.form.customer_phone = this.form.customer_phone.slice(0, 18);
             }
-            return true;
+        },
+        validatePhone() {
+            const cleanedPhone = this.form.customer_phone.replace(/\D/g, '');
+            return cleanedPhone.length === 11;
         },
         submitOrder() {
             if (!this.validateForm()) return;
 
-            const cleanedPhone = this.form.customer_phone.replace(/\D/g, '');
+            const cleanedPhone = this.form.customer_phone.replace(/[^\d]/g, '').trim();
 
             const orderData = {
                 customer_name: this.form.customer_name,
@@ -293,9 +297,10 @@ export default {
 
             api.post('/orders', orderData)
                 .then(res => {
-                    console.log('Заказ успешно создан:', res.data);
-                    this.$refs.OrderSuccessPopUp.showPopUp();
-                    this.clearCartForRestaurant(this.restaurantSlug);
+                    if(res.data.ok === true){
+                        this.$refs.OrderSuccessPopUp.showPopUp();
+                        this.clearCartForRestaurant(this.restaurantSlug);
+                    }
                 })
                 .catch(error => {
                     console.error('Ошибка при оформлении заказа:', error.response?.data || error);
@@ -303,12 +308,9 @@ export default {
                 });
         },
         validateForm() {
-            console.log('validating');
-
             this.phoneError = false;
             let hasError = false;
 
-            // Обнуляем ошибки перед проверкой
             this.formErrors = {
                 customer_name: false,
                 customer_phone: false,

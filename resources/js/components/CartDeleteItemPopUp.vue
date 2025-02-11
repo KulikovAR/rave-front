@@ -50,7 +50,6 @@ export default {
         };
     },
     mounted() {
-        // Используем $nextTick, чтобы гарантировать, что элемент существует
         this.$nextTick(() => {
             const popUpBackground = document.querySelector('.cart-delete-item__pop-up__bg');
             if (popUpBackground) {
@@ -59,7 +58,6 @@ export default {
         });
     },
     beforeDestroy() {
-        // Удаляем обработчик перед уничтожением компонента
         const popUpBackground = document.querySelector('.cart-delete-item__pop-up__bg');
         if (popUpBackground) {
             popUpBackground.removeEventListener('click', this.closePopUp);

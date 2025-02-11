@@ -74,6 +74,7 @@ export default {
     },
     mounted(){
         this.initData();
+        this.$store.dispatch('cart/validateCart');
     }
 }
 </script>

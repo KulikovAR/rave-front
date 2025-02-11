@@ -66,12 +66,11 @@ export default {
         return {
             restaurantSlug: this.$route.params.restaurantSlug,
             breadCrumbs: [],
-            isProductsLoaded: false,  // Флаг для отслеживания загрузки продуктов
+            isProductsLoaded: false, 
         };
     },
     computed: {
         ...mapGetters("cart", ["getCart", "getTotalPrice"]),
-        // Используем геттер из Vuex для получения рекомендованных продуктов
         recommendedProductsList() {
             return this.$store.getters['restaurant/recommendedProducts'](this.restaurantSlug);
         },
@@ -93,7 +92,6 @@ export default {
             ];
         },
         handleCartState() {
-            // Пересчитываем рекомендованные товары после изменений в корзине
             this.updateRecommendedProducts();
         },
         loadProductsIfNeeded() {
@@ -114,6 +112,7 @@ export default {
     mounted() {
         this.initData();
         this.loadProductsIfNeeded();
+        this.$store.dispatch('cart/validateCart');
     },
 };
 </script>

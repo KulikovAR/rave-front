@@ -75,6 +75,11 @@ export default {
                 // Обновляем рекомендованные товары для данного ресторана
                 this.dispatch('restaurant/updateRecommendedProducts', restaurantSlug);
             }
+        },
+
+        UPDATE_CART(state, { restaurantId, updatedCart }) {
+            state.carts[restaurantId] = updatedCart;
+            state.carts = { ...state.carts };
         }
     },
     actions: {
@@ -96,6 +101,38 @@ export default {
         // Действие для очистки корзины по ресторану
         clearCartForRestaurant({ commit }, restaurantSlug) {
             commit('CLEAR_CART_FOR_RESTAURANT', restaurantSlug);
+        },
+
+        async validateCart({ commit, state, rootState }) {
+            try {
+                // Ждём загрузки актуальных товаров, если их ещё нет
+                if (!rootState.restaurant.products.length) {
+                    await this.dispatch('restaurant/fetchProducts');
+                }
+    
+                // Получаем все ID актуальных товаров из БД
+                const validProductIds = new Set(rootState.restaurant.products.map(p => p.id));
+    
+                // Проверяем все корзины
+                let updated = false;
+                for (const restaurantId in state.carts) {
+                    const filteredCart = state.carts[restaurantId].filter(item => validProductIds.has(item.id));
+    
+                    // Если были удалены несуществующие товары, обновляем корзину
+                    if (filteredCart.length !== state.carts[restaurantId].length) {
+                        commit('UPDATE_CART', { restaurantId, updatedCart: filteredCart });
+                        updated = true;
+                    }
+                }
+    
+                // Если корзина изменилась — обновляем localStorage
+                if (updated) {
+                    localStorage.setItem('multiCart', JSON.stringify(state.carts));
+                }
+    
+            } catch (error) {
+                console.error('Ошибка при валидации корзины:', error);
+            }
         }
     }
 };

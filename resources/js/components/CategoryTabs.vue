@@ -2,7 +2,6 @@
     <div class="category-tabs">
         <div class="container">
             <div class="category-tabs__wrapper">
-                <!-- Логотип ресторана -->
                 <div class="current-restaurant__logo" ref="logo">
                     <img 
                         class="current-restaurant__logo-img" 
@@ -11,7 +10,6 @@
                     >
                 </div>
 
-                <!-- Список категорий с горизонтальной прокруткой -->
                 <div class="category-tabs__list-wrapper" ref="listWrapper">
                     <div class="category-tabs__list" ref="scrollContainer">
                         <div 
@@ -63,7 +61,6 @@ export default {
         const route = useRoute();
         const router = useRouter();
 
-        // Получение данных из Vuex
         const categories = computed(() => {
             const currentRestaurant = store.state.restaurant.restaurants.find(r => r.slug === props.restaurantSlug);
             if (!currentRestaurant) return [];
@@ -72,16 +69,13 @@ export default {
         });
 
         const hasNewItems = computed(() => {
-            // Находим текущий ресторан
             const currentRestaurant = store.state.restaurant.restaurants.find(r => r.slug === props.restaurantSlug);
             if (!currentRestaurant) return false;
 
-            // Фильтруем категории, принадлежащие текущему ресторану
             const restaurantCategories = store.state.restaurant.categories
                 .filter(category => category.restaurant_id === currentRestaurant.id)
-                .map(category => category.id); // Берём только ID категорий
+                .map(category => category.id);
 
-            // Проверяем, есть ли новые продукты в этих категориях
             return store.state.restaurant.products.some(product =>
                 product.new === 1 && restaurantCategories.includes(product.category_id)
             );
@@ -104,7 +98,6 @@ export default {
             return currentTab.value === tabSlug;
         };
 
-        // Методы навигации
         const goToCatalog = (categorySlug) => {
             router.push({ 
                 name: categorySlug === "new" ? "newCatalog" : "catalog",
@@ -116,12 +109,10 @@ export default {
             router.push({ name: "categories", params: { restaurantSlug: props.restaurantSlug } });
         };
 
-        // DOM-рефы
         const listWrapper = ref(null);
         const logo = ref(null);
         const scrollContainer = ref(null);
 
-        // Обработчик прокрутки окна
         const handleScroll = () => {
             if (listWrapper.value && logo.value) {
                 const background = window.scrollY > 10 ? "#FFFFFC" : "transparent";
@@ -130,7 +121,6 @@ export default {
             }
         };
 
-        // Горизонтальная прокрутка мышью и перетаскивание
         const handleMouseDown = (e) => {
             const slider = scrollContainer.value;
             if (!slider) return;

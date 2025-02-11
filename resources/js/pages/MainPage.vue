@@ -63,7 +63,6 @@ export default {
     computed: {
         ...mapState('restaurant', ['restaurants', 'banner']),
         
-        // Вычисляемое свойство для баннера
         bannerWithImagePath() {
             if (this.banner && this.banner.image_path) {
                 return {
@@ -91,10 +90,10 @@ export default {
     },
     mounted() {
         if (!this.restaurants.length) {
-            this.fetchRestaurants(); // Загружаем рестораны из Vuex, если они ещё не загружены
+            this.fetchRestaurants();
         }
         if (!this.banner) {
-            this.fetchBanner(); // Загружаем баннер, если его нет
+            this.fetchBanner();
         }
     }
 };

@@ -31,7 +31,6 @@ export default {
     setup(props) {
         const store = useStore();
 
-        // Функция для получения полного пути к изображению
         const getFullImagePath = (imageName) => {
             return `${BASE_URL}${imageName}`;
         };
@@ -46,7 +45,7 @@ export default {
                 .filter((category) => category.restaurant_id === currentRestaurant.id)
                 .map((category) => ({
                     ...category,
-                    image: getFullImagePath(category.image), // Добавляем полный путь к картинке
+                    image: getFullImagePath(category.image),
                 }));
         });
 

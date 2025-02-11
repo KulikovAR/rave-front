@@ -35,7 +35,7 @@ export default {
             return this.$store.getters['restaurant/restaurants'];
         },
         hasSeenPopUp() {
-            return this.$store.getters['ui/hasSeenPopUp'](this.restaurantSlug); // Проверяем флаг для конкретного ресторана
+            return this.$store.getters['ui/hasSeenPopUp'](this.restaurantSlug);
         },
         isClosed() {
             const restaurant = this.restaurants.find(r => r.slug === this.restaurantSlug);
@@ -46,7 +46,7 @@ export default {
     },
     methods: {
         closePopUp() {
-            this.$store.dispatch('ui/markPopUpAsSeen', this.restaurantSlug); // Сохраняем флаг ТОЛЬКО для этого ресторана
+            this.$store.dispatch('ui/markPopUpAsSeen', this.restaurantSlug);
         },
         initScheduleData() {
             const restaurant = this.restaurants.find(r => r.slug === this.restaurantSlug);

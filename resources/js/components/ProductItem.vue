@@ -3,7 +3,7 @@
         <div class="container">
             <div class="product-item">
                 <div class="product-item__photo">
-                    <img class="product-item__photo-img" :src="product.image" alt="">
+                    <img class="product-item__photo-img" :src="product.image || getPlaceholder()" alt="">
                 </div>
                 <div class="product-item__content">
                     <div class="product-item__content__name">
@@ -45,16 +45,16 @@ import { mapActions } from "vuex";
 export default {
     name: 'ProductItem',
     props: {
-        product: Object, // Пропс для передачи данных о продукте
+        product: Object,
         restaurantSlug: String
     },
     data() {
         return {
-            quantity: 1  // Количество по умолчанию
+            quantity: 1 
         };
     },
     methods: {
-        ...mapActions("cart", ["addToCart"]),  // Vuex экшен для добавления в корзину
+        ...mapActions("cart", ["addToCart"]), 
 
         increaseQuantity() {
             this.quantity++;
@@ -72,7 +72,7 @@ export default {
                 name: this.product.name,
                 price: this.product.price,
                 quantity: this.quantity,
-                image: this.product.image,
+                image: this.product.image || this.getPlaceholder() || '',
                 calories: this.product.calories,
                 weight: this.product.weight,
                 recommended_products: this.product.recommended_products
@@ -80,15 +80,17 @@ export default {
 
             this.addToCart({ restaurantId, item: cartItem });
 
-            this.quantity = 1; // Сбрасываем количество после добавления
+            this.quantity = 1;
         },
         formatPrice(price) {
             return Math.floor(parseFloat(price));
         },
 
-        // Метод для формирования полного пути к изображению
         getFullImagePath(imageName) {
             return `https://rave-back.pisateli-studio.ru/storage/${imageName}`;
+        },
+        getPlaceholder() {
+            return this.$restaurantPlugs[this.restaurantSlug] || '/images/plugs/default.png';
         }
     }
 };

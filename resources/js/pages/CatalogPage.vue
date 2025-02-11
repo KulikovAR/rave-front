@@ -82,7 +82,6 @@ export default {
                 }
             }
 
-            // Прокидываем картинку через product.media[0].path
             return products.map(product => ({
                 ...product,
                 image: product.media?.[0]?.path ? this.getFullImagePath(product.media[0].path) : null
@@ -108,6 +107,7 @@ export default {
 
     mounted() {
         this.initData();
+        this.$store.dispatch('cart/validateCart');
     },
 
     watch: {

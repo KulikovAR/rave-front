@@ -51,7 +51,7 @@ export default {
         flex-direction: column;
 
         
-        background-size: cover, contain, cover;   
+        background-size: cover, auto 100%, cover;   
         background-position: center, right bottom, center;
         background-repeat: no-repeat, no-repeat, repeat;
     }

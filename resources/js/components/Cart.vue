@@ -97,7 +97,7 @@ export default {
         CartDeleteItemPopUp,
     },
     props: {
-        restaurantSlug: String, // Принимаем restaurantSlug
+        restaurantSlug: String,
     },
     computed: {
         ...mapGetters("cart", ["getCart", "getTotalPrice"]),
@@ -127,7 +127,6 @@ export default {
             this.$emit('itemRemovedFromCart');
         },
 
-        // Метод для обновления количества через input
         onQuantityInputChange(event, itemId) {
             let newQuantity = parseInt(event.target.value, 10);
             if (isNaN(newQuantity) || newQuantity < 1) {
@@ -136,7 +135,7 @@ export default {
 
             const item = this.cart.find(i => i.id === itemId);
             if (item) {
-                const amount = newQuantity - item.quantity; // Разница, которую нужно применить
+                const amount = newQuantity - item.quantity;
                 if (amount !== 0) {
                     this.updateQuantity({ restaurantId: this.restaurantSlug, itemId, amount });
                 }
@@ -185,6 +184,7 @@ export default {
         align-items: stretch;
         border-right: 1px solid #9E9E9E;
         border-bottom: 1px solid #9E9E9E;
+        max-height: 114px;
     }
 
     .cart__item__photo{
@@ -409,8 +409,9 @@ export default {
         }
         .cart__item__photo{
             margin-right: 8px;
-            max-width: 37%;
-            width: auto;
+            /* max-width: 37%; */
+            width: 100%;
+            max-width: 25%;
         }
         .cart__item__content{
             flex-direction: column;

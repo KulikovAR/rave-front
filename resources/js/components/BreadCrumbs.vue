@@ -10,7 +10,6 @@
                     :to="{ name: item.name, params: item.params}"
                     class="bread-crumbs__item"
                 >
-                <!-- :to="{ path:item.path }"  -->
                         {{item.textname}}
                 </router-link>
             </div>

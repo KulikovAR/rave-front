@@ -7,7 +7,6 @@
                         С этим берут
                     </div>
 
-                    <!-- Показываем стрелки только если хватает товаров для прокрутки -->
                     <div class="recommended-products__slider-buttons" v-show="shouldShowArrows && !isMobile">
                         <img
                             class="recommended-products__slider-btn prev"
@@ -72,7 +71,7 @@ export default {
         return {
             isMobile: false,
             swiperInstance: null,
-            slidesPerView: 4 // Значение по умолчанию, обновляется динамически
+            slidesPerView: 4
         };
     },
     computed: {

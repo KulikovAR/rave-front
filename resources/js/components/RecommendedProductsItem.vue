@@ -3,7 +3,7 @@
         :class="{ new: item.new }"
     >
         <div class="catalog-item__photo">
-            <img class="catalog-item__photo-img" :src="item.image" alt="photo">
+            <img class="catalog-item__photo-img" :src="item.image || getPlaceholder()" alt="photo">
             <div class="catelog-item__new-flag">
                 New
             </div>
@@ -54,6 +54,10 @@ export default {
             });
         },
 
+        getPlaceholder() {
+            return this.$restaurantPlugs[this.restaurantSlug] || '/images/plugs/default.png';
+        },
+
         handleAddToCart() {
             const restaurantId = this.restaurantSlug;
 
@@ -61,8 +65,8 @@ export default {
                 id: this.item.id,
                 name: this.item.name,
                 price: this.item.price,
-                quantity: 1,  // Добавляем 1 товар по умолчанию
-                image: this.item.image || '',
+                quantity: 1,
+                image: this.item.image || this.getPlaceholder() || '',
                 calories: this.item.calories,
                 weight: this.item.weight,
                 recommended_products: this.item.recommended_products

@@ -11,7 +11,6 @@
                 На Главную
               </router-link>
   
-              <!-- Условное отображение для "Контактов" -->
               <div 
                 class="header__link" 
                 v-if="!is404Page"
@@ -20,17 +19,16 @@
                 Контакты
               </div>
   
-              <!-- Условное отображение для корзины -->
               <router-link 
                 v-if="!is404Page"
                 :to="{ name: 'cart', params: { restaurantSlug } }" 
                 class="header__link cart mobile"
-                :class="{ active: restaurantCartCount > 0 }"
+                :class="{ active: shouldShowCart }"
                 @click="closeMenu()"
               >
                 <img class="header__cart" src="/images/cart/cart.svg" alt="Корзина">
                 <img class="header__cart active" src="/images/cart/cart-active.svg" alt="Корзина">
-                <div v-if="restaurantCartCount > 0" class="header__cart__quantity">{{ restaurantCartCount }}</div>
+                <div v-if="shouldShowCart" class="header__cart__quantity">{{ restaurantCartCount }}</div>
               </router-link>
   
               <div class="main-header__burger-btn" @click="toggleMenu">
@@ -67,14 +65,19 @@
       };
     },
     computed: {
-      ...mapGetters("cart", ["getCart"]),
+      ...mapGetters("cart", ["getCart", "getTotalPrice"]),
       restaurantCartCount() {
         return (this.getCart(this.restaurantSlug) || []).reduce(
           (sum, item) => sum + item.quantity,
           0
         );
       },
-      // Проверяем, находимся ли мы на странице 404
+      cartTotalPrice() {
+        return this.getTotalPrice(this.restaurantSlug);
+      },
+      shouldShowCart() {
+        return this.restaurantCartCount > 0 && this.cartTotalPrice > 0;
+      },
       is404Page() {
         return this.$route.name === '404';
       }

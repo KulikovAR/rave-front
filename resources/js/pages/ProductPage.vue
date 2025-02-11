@@ -53,22 +53,19 @@ export default {
             categorySlug: this.$route.params.categorySlug,
             productSlug: this.$route.params.productSlug,
             breadCrumbs: [],
-            product: {},  // Данные о продукте
+            product: {},
         };
     },
     computed: {
         ...mapState('restaurant', ['products']),
         ...mapGetters('restaurant', ['getProductBySlug']),
         
-        // Получаем продукт из геттера
         productData() {
             const product = this.getProductBySlug(this.productSlug);
-            console.log('productData computed:', product); // Логирование
             return product;
         }
     },
     watch: {
-        // Слежение за изменением slug продукта и загрузка данных, если они изменяются
         '$route.params.productSlug': 'loadProductData'
     },
     methods: {
@@ -78,7 +75,6 @@ export default {
             this.$refs.ContactsPopUp.showPopUp();
         },
 
-        // Получаем полный путь к изображению
         getFullImagePath(imageName) {
             return `${BASE_URL}${imageName}`;
         },
@@ -107,17 +103,15 @@ export default {
             }
         },
 
-        // Загружаем продукт, если его нет в хранилище
         loadProductData() {
             if (!this.productData) {
-                console.log('Продукт не найден в хранилище, загружаем...');
                 this.$store.dispatch('restaurant/fetchProducts')
                     .then(() => {
                         const loadedProduct = this.productData;
                         if (loadedProduct) {
                             this.product = {
                                 ...loadedProduct,
-                                image: this.getFullImagePath(loadedProduct.media[0].path),
+                                image: loadedProduct.media?.[0]?.path ? this.getFullImagePath(loadedProduct.media[0].path) : null,
                                 recommended_products: loadedProduct.recommended_products.map(product => ({
                                     ...product,
                                     image: product.media?.[0]?.path ? this.getFullImagePath(product.media[0].path) : null
@@ -130,10 +124,9 @@ export default {
                         console.error('Ошибка при загрузке продукта:', error);
                     });
             } else {
-                // Если продукт уже найден, просто инициализируем breadcrumbs
                 this.product = {
                     ...this.productData,
-                    image: this.getFullImagePath(this.productData.media[0].path),
+                    image: this.productData.media?.[0]?.path ? this.getFullImagePath(this.productData.media[0].path) : null,
                     recommended_products: this.productData.recommended_products.map(product => ({
                         ...product,
                         image: product.media?.[0]?.path ? this.getFullImagePath(product.media[0].path) : null
@@ -144,20 +137,19 @@ export default {
         }
     },
     mounted() {
-        // При загрузке страницы проверяем, есть ли данные о продукте в хранилище
         if (this.products.length === 0) {
-            console.log('Продукты не загружены, загружаем...');
             this.$store.dispatch('restaurant/fetchProducts')
                 .then(() => {
-                    this.loadProductData();  // После загрузки данных, загружаем продукт
+                    this.loadProductData();
                 })
                 .catch(error => {
                     console.error('Ошибка при загрузке продуктов:', error);
                 });
         } else {
-            // Если продукты уже загружены, сразу пытаемся найти продукт
             this.loadProductData();
         }
+
+        this.$store.dispatch('cart/validateCart');
     }
 };
 </script>

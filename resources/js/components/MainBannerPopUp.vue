@@ -48,7 +48,7 @@ export default {
     },
     watch: {
         banner: {
-            immediate: true, // Запускаем сразу при монтировании
+            immediate: true,
             handler() {
                 this.checkBanner();
             }

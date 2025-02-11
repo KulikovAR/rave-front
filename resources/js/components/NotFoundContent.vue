@@ -49,17 +49,13 @@ export default {
         text-align: center;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
-        /* border: 2px solid var(--Btn-Black, #000000); */
+
         margin-bottom: 30px;
 
-        color: transparent; /* Делаем текст прозрачным */
+        color: transparent; 
         -webkit-text-stroke: 2px var(--Btn-Black, #000000); 
         
-        /* text-shadow: 
-            -2px -2px 0 var(--Btn-Black, #000000),  
-            2px -2px 0 var(--Btn-Black, #000000),  
-            -2px 2px 0 var(--Btn-Black, #000000),  
-            2px 2px 0 var(--Btn-Black, #000000); */
+        
     }
 
     .not-found__content__text{
