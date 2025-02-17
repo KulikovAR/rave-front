@@ -248,7 +248,7 @@ export default {
             return this.getTotalPrice(this.restaurantSlug);
         },
         isOrderDisabled() {
-            return this.totalPrice < this.minDeliveryPrice;
+            return this.deliveryType === 'Доставка' && this.totalPrice < this.minDeliveryPrice;
         }
     },
     methods: {

@@ -23511,7 +23511,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       return this.getTotalPrice(this.restaurantSlug);
     },
     isOrderDisabled: function isOrderDisabled() {
-      return this.totalPrice < this.minDeliveryPrice;
+      return this.deliveryType === 'Доставка' && this.totalPrice < this.minDeliveryPrice;
     }
   }),
   methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_5__.mapActions)('cart', ['removeItem', 'clearCartForRestaurant'])), {}, {
