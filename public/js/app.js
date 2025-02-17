@@ -23499,7 +23499,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         'Макеевка': ['Горняцкий', 'Кировский', 'Советский', 'Червоногвардейский']
       },
       openDropdown: null,
-      phoneError: false
+      phoneError: false,
+      minDeliveryPrice: 2000
     };
   },
   computed: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_5__.mapGetters)('cart', ['getCart', 'getTotalPrice'])), {}, {
@@ -23510,7 +23511,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       return this.getTotalPrice(this.restaurantSlug);
     },
     isOrderDisabled: function isOrderDisabled() {
-      return this.deliveryType === 'Доставка' && this.totalPrice < 2000;
+      return this.totalPrice < this.minDeliveryPrice;
     }
   }),
   methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_5__.mapActions)('cart', ['removeItem', 'clearCartForRestaurant'])), {}, {
@@ -23621,8 +23622,22 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         return false;
       }
       return true;
+    },
+    fetchMinDeliveryPrice: function fetchMinDeliveryPrice() {
+      var _this3 = this;
+      _api__WEBPACK_IMPORTED_MODULE_4__["default"].get("/settings/min-delivery-price").then(function (res) {
+        if (res.data.ok && res.data.data.value) {
+          _this3.minDeliveryPrice = parseInt(res.data.data.value, 10);
+        }
+      })["catch"](function (error) {
+        var _error$response2;
+        console.error("Ошибка при получении min-delivery-price:", ((_error$response2 = error.response) === null || _error$response2 === void 0 ? void 0 : _error$response2.data) || error);
+      });
     }
-  })
+  }),
+  mounted: function mounted() {
+    this.fetchMinDeliveryPrice();
+  }
 });
 
 /***/ }),
@@ -25956,7 +25971,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[12] || (_cache[12] = function ($event) {
       return !$options.isOrderDisabled && $options.submitOrder();
     })
-  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.isOrderDisabled ? "Минимальная сумма заказа для доставки - 2000₽" : "Оформить заказ"), 3 /* TEXT, CLASS */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_EmptyCartContent, {
+  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.isOrderDisabled ? "\u041C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0443\u043C\u043C\u0430 \u0437\u0430\u043A\u0430\u0437\u0430 \u0434\u043B\u044F \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0438 - ".concat($data.minDeliveryPrice, "\u20BD") : "Оформить заказ"), 3 /* TEXT, CLASS */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_EmptyCartContent, {
     key: 1
   }))]), $options.cart.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_33, [_cache[17] || (_cache[17] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "cart-total__title"
@@ -25967,7 +25982,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[13] || (_cache[13] = function ($event) {
       return !$options.isOrderDisabled && $options.submitOrder();
     })
-  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.isOrderDisabled ? "Минимальная сумма заказа для доставки - 2000₽" : "Оформить заказ"), 3 /* TEXT, CLASS */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_OrderSuccessPopUp, {
+  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.isOrderDisabled ? "\u041C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0443\u043C\u043C\u0430 \u0437\u0430\u043A\u0430\u0437\u0430 \u0434\u043B\u044F \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0438 - ".concat($data.minDeliveryPrice, "\u20BD") : "Оформить заказ"), 3 /* TEXT, CLASS */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_OrderSuccessPopUp, {
     ref: "OrderSuccessPopUp"
   }, null, 512 /* NEED_PATCH */)])]);
 }

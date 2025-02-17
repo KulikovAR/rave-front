@@ -150,7 +150,7 @@
                                 :class="{ disabled: isOrderDisabled }"
                                 @click="!isOrderDisabled && submitOrder()"
                             >
-                                {{ isOrderDisabled ? "Минимальная сумма заказа для доставки - 2000₽" : "Оформить заказ" }}
+                                {{ isOrderDisabled ? `Минимальная сумма заказа для доставки - ${minDeliveryPrice}₽` : "Оформить заказ" }}
                             </div>
                         </div>
 
@@ -176,7 +176,7 @@
                     :class="{ disabled: isOrderDisabled }"
                     @click="!isOrderDisabled && submitOrder()"
                 >
-                    {{ isOrderDisabled ? "Минимальная сумма заказа для доставки - 2000₽" : "Оформить заказ" }}
+                    {{ isOrderDisabled ? `Минимальная сумма заказа для доставки - ${minDeliveryPrice}₽` : "Оформить заказ" }}
                 </div>
             </div>
 
@@ -236,6 +236,7 @@ export default {
             },
             openDropdown: null,
             phoneError: false,
+            minDeliveryPrice: 2000,
         };
     },
     computed: {
@@ -247,7 +248,7 @@ export default {
             return this.getTotalPrice(this.restaurantSlug);
         },
         isOrderDisabled() {
-            return this.deliveryType === 'Доставка' && this.totalPrice < 2000;
+            return this.totalPrice < this.minDeliveryPrice;
         }
     },
     methods: {
@@ -366,7 +367,21 @@ export default {
             }
 
             return true;
+        },
+        fetchMinDeliveryPrice() {
+            api.get("/settings/min-delivery-price")
+                .then((res) => {
+                    if (res.data.ok && res.data.data.value) {
+                        this.minDeliveryPrice = parseInt(res.data.data.value, 10);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Ошибка при получении min-delivery-price:", error.response?.data || error);
+                });
         }
+    },
+    mounted(){
+        this.fetchMinDeliveryPrice();
     }
 };
 </script>
