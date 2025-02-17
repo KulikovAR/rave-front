@@ -145,8 +145,12 @@
                                     {{ totalPrice }} р.
                                 </div>
                             </div>
-                            <div class="cart-order-btn" @click="submitOrder()">
-                                Оформить заказ
+                            <div 
+                                class="cart-order-btn"
+                                :class="{ disabled: isOrderDisabled }"
+                                @click="!isOrderDisabled && submitOrder()"
+                            >
+                                {{ isOrderDisabled ? "Минимальная сумма заказа для доставки - 2000₽" : "Оформить заказ" }}
                             </div>
                         </div>
 
@@ -167,8 +171,12 @@
                         {{ totalPrice }} р.
                     </div> 
                 </div>
-                <div class="cart-order-btn" @click="submitOrder">
-                    Оформить заказ
+                <div 
+                    class="cart-order-btn" 
+                    :class="{ disabled: isOrderDisabled }"
+                    @click="!isOrderDisabled && submitOrder()"
+                >
+                    {{ isOrderDisabled ? "Минимальная сумма заказа для доставки - 2000₽" : "Оформить заказ" }}
                 </div>
             </div>
 
@@ -237,6 +245,9 @@ export default {
         },
         totalPrice() {
             return this.getTotalPrice(this.restaurantSlug);
+        },
+        isOrderDisabled() {
+            return this.deliveryType === 'Доставка' && this.totalPrice < 2000;
         }
     },
     methods: {
@@ -778,6 +789,14 @@ textarea.order-form__input {
         color: var(--Btn-Hover-Red, #BE1522);
         border: 1px solid var(--Btn-Hover-Red, #BE1522)
     }
+
+    .cart-order-btn.disabled{
+        background: #505050;
+    }
+
+    .cart-order-btn.disabled:hover{
+        border: none;
+    }
     
 </style>
 
@@ -1047,5 +1066,15 @@ textarea.order-form__input {
 
         }
     }
+
+    @media (max-width: 430px){
+        .cart-order-btn.disabled{
+            text-align: center;
+            height: 68px;
+            padding: 0 16px;
+        }
+    }
+
+    
 </style>
 
