@@ -29,7 +29,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
-    return { top: 0, behavior: 'smooth' }; // Прокрутка вверх с плавной анимацией
+    return { top: 0, behavior: 'smooth' };
   }
 })
 

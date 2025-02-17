@@ -26842,7 +26842,7 @@ var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_7__.createRouter)({
     return {
       top: 0,
       behavior: 'smooth'
-    }; // Прокрутка вверх с плавной анимацией
+    };
   }
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (router);

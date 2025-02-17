@@ -7,6 +7,7 @@ mix.js('resources/js/app.js', 'public/js')
         require('postcss-import'),
         require('autoprefixer'),
     ])
+    .version()
     .postCss('resources/css/variables.css', 'public/css')
     .webpackConfig({
         plugins: [
