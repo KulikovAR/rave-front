@@ -112,10 +112,12 @@ export default {
                             this.product = {
                                 ...loadedProduct,
                                 image: loadedProduct.media?.[0]?.path ? this.getFullImagePath(loadedProduct.media[0].path) : null,
-                                recommended_products: loadedProduct.recommended_products.map(product => ({
-                                    ...product,
-                                    image: product.media?.[0]?.path ? this.getFullImagePath(product.media[0].path) : null
-                                }))
+                                recommended_products: loadedProduct.recommended_products
+                                    .filter(product => product.hidden === 0)
+                                    .map(product => ({
+                                        ...product,
+                                        image: product.media?.[0]?.path ? this.getFullImagePath(product.media[0].path) : null
+                                    }))
                             };
                             this.initBreadCrumbs();
                         }
@@ -127,10 +129,12 @@ export default {
                 this.product = {
                     ...this.productData,
                     image: this.productData.media?.[0]?.path ? this.getFullImagePath(this.productData.media[0].path) : null,
-                    recommended_products: this.productData.recommended_products.map(product => ({
-                        ...product,
-                        image: product.media?.[0]?.path ? this.getFullImagePath(product.media[0].path) : null
-                    }))
+                    recommended_products: this.productData.recommended_products
+                        .filter(product => product.hidden === 0)
+                        .map(product => ({
+                            ...product,
+                            image: product.media?.[0]?.path ? this.getFullImagePath(product.media[0].path) : null
+                        }))
                 };
                 this.initBreadCrumbs();
             }

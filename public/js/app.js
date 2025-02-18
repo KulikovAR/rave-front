@@ -24021,7 +24021,9 @@ var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
   },
   computed: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_7__.mapGetters)("cart", ["getCart", "getTotalPrice"])), {}, {
     recommendedProductsList: function recommendedProductsList() {
-      return this.$store.getters['restaurant/recommendedProducts'](this.restaurantSlug);
+      return this.$store.getters['restaurant/recommendedProducts'](this.restaurantSlug).filter(function (product) {
+        return product.hidden === 0;
+      });
     },
     totalPrice: function totalPrice() {
       return this.getTotalPrice(this.restaurantSlug);
@@ -24574,7 +24576,9 @@ var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
             var _loadedProduct$media;
             _this.product = _objectSpread(_objectSpread({}, loadedProduct), {}, {
               image: (_loadedProduct$media = loadedProduct.media) !== null && _loadedProduct$media !== void 0 && (_loadedProduct$media = _loadedProduct$media[0]) !== null && _loadedProduct$media !== void 0 && _loadedProduct$media.path ? _this.getFullImagePath(loadedProduct.media[0].path) : null,
-              recommended_products: loadedProduct.recommended_products.map(function (product) {
+              recommended_products: loadedProduct.recommended_products.filter(function (product) {
+                return product.hidden === 0;
+              }).map(function (product) {
                 var _product$media;
                 return _objectSpread(_objectSpread({}, product), {}, {
                   image: (_product$media = product.media) !== null && _product$media !== void 0 && (_product$media = _product$media[0]) !== null && _product$media !== void 0 && _product$media.path ? _this.getFullImagePath(product.media[0].path) : null
@@ -24590,7 +24594,9 @@ var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
         var _this$productData$med;
         this.product = _objectSpread(_objectSpread({}, this.productData), {}, {
           image: (_this$productData$med = this.productData.media) !== null && _this$productData$med !== void 0 && (_this$productData$med = _this$productData$med[0]) !== null && _this$productData$med !== void 0 && _this$productData$med.path ? this.getFullImagePath(this.productData.media[0].path) : null,
-          recommended_products: this.productData.recommended_products.map(function (product) {
+          recommended_products: this.productData.recommended_products.filter(function (product) {
+            return product.hidden === 0;
+          }).map(function (product) {
             var _product$media2;
             return _objectSpread(_objectSpread({}, product), {}, {
               image: (_product$media2 = product.media) !== null && _product$media2 !== void 0 && (_product$media2 = _product$media2[0]) !== null && _product$media2 !== void 0 && _product$media2.path ? _this.getFullImagePath(product.media[0].path) : null
@@ -27726,7 +27732,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n@media (max-width: 1000px){\n.category-item[data-v-197b1ec8] {\r\n            width: 100%;\n}\n}\n@media (max-width: 768px){\n.category-item[data-v-197b1ec8]{\r\n            height: 170px;\r\n            padding: 16px 14px;\n}\n.category-item__name[data-v-197b1ec8]{\r\n            font-family: Vela Sans GX;\r\n            font-size: 16px;\r\n            font-weight: 600;\r\n            line-height: 18.24px;\r\n            letter-spacing: -0.05em;\r\n            text-align: left;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\r\n            margin-bottom: 4px;\r\n            max-height: 18.24px;\n}\n.category-item__description[data-v-197b1ec8]{\r\n            font-family: Vela Sans GX;\r\n            font-size: 12px;\r\n            font-weight: 300;\r\n            line-height: 14.52px;\r\n            letter-spacing: -0.05em;\r\n            text-align: left;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\r\n\r\n\r\n            -webkit-line-clamp: 3; /* Количество строк */\r\n            line-clamp: 3; /* Стандартная версия */\r\n            max-height: calc(14.52px * 3); /* 2 строки * высоту строки */\n}\n.category-item__link[data-v-197b1ec8]{\r\n            width: 115px;\r\n            height: 30px;\r\n            font-family: Vela Sans GX;\r\n            font-size: 12px;\r\n            font-weight: 600;\r\n            line-height: 17.4px;\r\n            text-align: left;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n@media (max-width: 1000px){\n.category-item[data-v-197b1ec8] {\r\n            width: 100%;\n}\n}\n@media (max-width: 768px){\n.category-item[data-v-197b1ec8]{\r\n            height: 170px;\r\n            padding: 16px 14px;\n}\n.category-item__name[data-v-197b1ec8]{\r\n            font-family: Vela Sans GX;\r\n            font-size: 16px;\r\n            font-weight: 600;\r\n            line-height: 18.24px;\r\n            letter-spacing: -0.05em;\r\n            text-align: left;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\r\n            margin-bottom: 4px;\r\n            max-height: 18.24px;\n}\n.category-item__description[data-v-197b1ec8]{\r\n            font-family: Vela Sans GX;\r\n            font-size: 12px;\r\n            font-weight: 300;\r\n            line-height: 14.52px;\r\n            letter-spacing: -0.05em;\r\n            text-align: left;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\r\n\r\n\r\n            -webkit-line-clamp: 5; /* Количество строк */\r\n            line-clamp: 5; /* Стандартная версия */\r\n            max-height: calc(14.52px * 5); /* 2 строки * высоту строки */\n}\n.category-item__link[data-v-197b1ec8]{\r\n            width: 115px;\r\n            height: 30px;\r\n            font-family: Vela Sans GX;\r\n            font-size: 12px;\r\n            font-weight: 600;\r\n            line-height: 17.4px;\r\n            text-align: left;\r\n            text-underline-position: from-font;\r\n            -webkit-text-decoration-skip-ink: none;\r\n                    text-decoration-skip-ink: none;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

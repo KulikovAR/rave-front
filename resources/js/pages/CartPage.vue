@@ -72,7 +72,8 @@ export default {
     computed: {
         ...mapGetters("cart", ["getCart", "getTotalPrice"]),
         recommendedProductsList() {
-            return this.$store.getters['restaurant/recommendedProducts'](this.restaurantSlug);
+            return this.$store.getters['restaurant/recommendedProducts'](this.restaurantSlug)
+                .filter(product => product.hidden === 0);
         },
         totalPrice() {
             return this.getTotalPrice(this.restaurantSlug);
