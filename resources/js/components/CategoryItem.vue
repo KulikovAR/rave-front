@@ -172,9 +172,9 @@ export default {
             text-decoration-skip-ink: none;
 
 
-            -webkit-line-clamp: 3; /* Количество строк */
-            line-clamp: 3; /* Стандартная версия */
-            max-height: calc(14.52px * 3); /* 2 строки * высоту строки */
+            -webkit-line-clamp: 5; /* Количество строк */
+            line-clamp: 5; /* Стандартная версия */
+            max-height: calc(14.52px * 5); /* 2 строки * высоту строки */
         }
 
         .category-item__link{
