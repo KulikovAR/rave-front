@@ -2,13 +2,13 @@ const mix = require('laravel-mix');
 const webpack = require('webpack');
 
 mix.js('resources/js/app.js', 'public/js')
-    .vue() // Компиляция Vue файлов
+    .vue()
     .postCss('resources/css/app.css', 'public/css', [
         require('postcss-import'),
         require('autoprefixer'),
     ])
     .postCss('resources/css/variables.css', 'public/css')
-    .version() // Это заставит Laravel Mix генерировать уникальные имена файлов для кеширования
+    .version()
     .webpackConfig({
         plugins: [
             new webpack.DefinePlugin({
