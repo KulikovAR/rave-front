@@ -1,1 +1,72 @@
-@font-face{font-family:Vela Sans GX;font-style:normal;font-weight:300 800;src:url(/fonts/VelaSans-GX.ttf) format("truetype")}@font-face{font-family:Gilroy;font-weight:500;src:url(/fonts/Gilroy-Medium.ttf) format("truetype")}body{background-image:url(/images/paper-bg.png),url(/images/noisy-bg.png);background-position:50%,50%;background-repeat:no-repeat,no-repeat;background-size:cover,cover;min-height:100vh}body.scroll{overflow:hidden}.container{margin:0 auto;max-width:1384px}::-webkit-scrollbar{background-color:transparent;width:6px}::-webkit-scrollbar-thumb{background:#be1522}::-webkit-scrollbar-track{border:none}::-webkit-scrollbar-corner,::-webkit-scrollbar-track{background:transparent!important}::-webkit-scrollbar-button{display:none}@media (max-width:1394px){.container{padding:0 28px}}@media (max-width:768px){.container{padding:0 16px}}
+@font-face {
+    font-family: 'Vela Sans GX';
+    src: url('/fonts/VelaSans-GX.ttf') format('truetype');
+    font-weight: 300 800; /* Диапазон доступных весов */
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Gilroy';
+    src: url('/fonts/Gilroy-Medium.ttf') format('truetype');
+    font-weight: 500;
+}
+
+body {
+    background-image: url('/images/paper-bg.png'), url('/images/noisy-bg.png');
+    background-size: cover, cover; 
+    background-position: center, center; 
+    background-repeat: no-repeat, no-repeat; 
+    min-height: 100vh;
+}
+
+body.scroll{
+    overflow: hidden;
+}
+
+.container{
+    max-width: 1384px;
+    margin: 0 auto;
+}
+
+*::-webkit-scrollbar {
+    width: 6px;
+    background-color: transparent;
+}
+
+/* Устанавливаем цвет ползунка */
+
+*::-webkit-scrollbar-thumb {
+    background: #BE1522;
+}
+
+/* Убираем подложку для скроллбара */
+
+*::-webkit-scrollbar-track {
+    background: transparent !important;
+    border: none;
+}
+
+/* Убираем угол прокрутки, если он присутствует */
+
+*::-webkit-scrollbar-corner {
+    background: transparent !important; 
+}
+
+/* Убираем стрелки на скроллбаре */
+
+*::-webkit-scrollbar-button {
+    display: none;
+}
+
+@media (max-width: 1394px) {
+    .container{
+        padding: 0 28px;
+    }
+}
+
+@media (max-width: 768px){
+    .container{
+        padding: 0 16px;
+    }
+}
+

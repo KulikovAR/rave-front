@@ -150,7 +150,7 @@
                                 :class="{ disabled: isOrderDisabled }"
                                 @click="!isOrderDisabled && submitOrder()"
                             >
-                                {{ isOrderDisabled ? `Минимальная сумма заказа для доставки - ${minDeliveryPrice}₽` : "Оформить заказ" }}
+                                {{ isOrderDisabled ? `Минимальная сумма доставки - ${minDeliveryPrice}₽` : "Оформить заказ" }}
                             </div>
                         </div>
 
@@ -176,7 +176,7 @@
                     :class="{ disabled: isOrderDisabled }"
                     @click="!isOrderDisabled && submitOrder()"
                 >
-                    {{ isOrderDisabled ? `Минимальная сумма заказа для доставки - ${minDeliveryPrice}₽` : "Оформить заказ" }}
+                    {{ isOrderDisabled ? `Минимальная сумма доставки - ${minDeliveryPrice}₽` : "Оформить заказ" }}
                 </div>
             </div>
 
@@ -231,7 +231,7 @@ export default {
             },
             cities: ['Донецк', 'Макеевка'],
             districts: {
-                'Донецк': ['Калининский', 'Будённовский', 'Киевский', 'Куйбышевский', 'Ленинский', 'Петровский', 'Пролетарский'],
+                'Донецк': ['Калининский', 'Будённовский', 'Киевский', 'Куйбышевский', 'Ленинский', 'Петровский', 'Пролетарский', 'Кировский', 'Ворошиловский'],
                 'Макеевка': ['Горняцкий', 'Кировский', 'Советский', 'Червоногвардейский']
             },
             openDropdown: null,

@@ -36,7 +36,7 @@
                     {{ item.description }}
                 </div>
                 <div class="restaurant__item__btn btn" @click="goToRestaurant(item.slug)">
-                    Перейти меню
+                    Перейти в меню
                 </div>
             </div>
         </div>
