@@ -538,6 +538,12 @@ export default {
     color: var(--Color-Dark-gray, #505050);
 }
 
+@media (prefers-color-scheme: dark) {
+    .order-form__input::placeholder{
+        color: rgba(255, 255, 255, 0.7); /* Dark theme color */
+    }
+}
+
 
 .order-form__input:focus {
     border: 1px solid var(--Btn-Black, #000000);
@@ -839,6 +845,12 @@ textarea.order-form__input {
         align-items: center;
         justify-content: space-between;
         position: relative;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .custom-dropdown{
+            color: rgba(255, 255, 255, 0.7);
+        }
     }
 
     /* Заблокированный селект */

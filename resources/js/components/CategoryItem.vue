@@ -107,6 +107,12 @@ export default {
         max-height: calc(20.3px * 7); /* 2 строки * высоту строки */
     }
 
+    @media (prefers-color-scheme: dark) {
+        .category-item__description{
+            color: rgba(255, 255, 255, 0.7);
+        }
+    }
+
     .category-item__link{
         width: 160px;
         height: 48px;
