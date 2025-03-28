@@ -22682,7 +22682,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 
 
-var BASE_URL = "https://rave-back.pisateli-studio.ru/storage/";
+var BASE_URL = "https://admin.ravedelivery.ru/storage/";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CategoryList",
   components: {
@@ -22734,6 +22734,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+var BASE_URL = "https://admin.ravedelivery.ru/storage/";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CategoryTabs",
   props: {
@@ -22773,7 +22774,7 @@ __webpack_require__.r(__webpack_exports__);
       }) || {};
     });
     var currentRestaurantLogo = (0,vue__WEBPACK_IMPORTED_MODULE_0__.computed)(function () {
-      return currentRestaurant.value.photo ? "https://rave-back.pisateli-studio.ru/storage/".concat(currentRestaurant.value.photo) : "";
+      return currentRestaurant.value.photo ? "".concat(BASE_URL).concat(currentRestaurant.value.photo) : "";
     });
     var currentRestaurantName = (0,vue__WEBPACK_IMPORTED_MODULE_0__.computed)(function () {
       return currentRestaurant.value.name || "";
@@ -22911,6 +22912,7 @@ function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
+var BASE_URL = "https://admin.ravedelivery.ru/storage/";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'ContactsPopUp',
   props: {
@@ -22991,7 +22993,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       return time.slice(0, 5);
     },
     getFullImagePath: function getFullImagePath(imageName) {
-      return "https://rave-back.pisateli-studio.ru/storage/".concat(imageName);
+      return "".concat(BASE_URL).concat(imageName);
     },
     openMap: function openMap() {
       if (!this.restaurant || !this.restaurant.map_link) return;
@@ -23708,6 +23710,7 @@ function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
+var BASE_URL = "https://admin.ravedelivery.ru/storage/";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'ProductItem',
   props: {
@@ -23750,7 +23753,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       return Math.floor(parseFloat(price));
     },
     getFullImagePath: function getFullImagePath(imageName) {
-      return "https://rave-back.pisateli-studio.ru/storage/".concat(imageName);
+      return "".concat(BASE_URL).concat(imageName);
     },
     getPlaceholder: function getPlaceholder() {
       return this.$restaurantPlugs[this.restaurantSlug] || '/images/plugs/default.png';
@@ -24000,7 +24003,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 
 
-var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
+var BASE_URL = "https://admin.ravedelivery.ru/storage/";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'CartPage',
   components: {
@@ -24108,7 +24111,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 
 
-var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
+var BASE_URL = "https://admin.ravedelivery.ru/storage/";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'CatalogPage',
   components: {
@@ -24185,6 +24188,7 @@ var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
   mounted: function mounted() {
     this.initData();
     this.$store.dispatch('cart/validateCart');
+    console.log('base:', BASE_URL);
   },
   watch: {
     '$route': function $route(to, from) {
@@ -24226,6 +24230,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 
 
+var BASE_URL = "https://admin.ravedelivery.ru/storage/";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'CategoryPage',
   components: {
@@ -24261,7 +24266,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       this.$refs.ContactsPopUp.showPopUp();
     },
     getFullImagePath: function getFullImagePath(imageName) {
-      return "https://rave-back.pisateli-studio.ru/storage/".concat(imageName);
+      return "".concat(BASE_URL).concat(imageName);
     },
     initData: function initData() {
       if (!this.restaurants.length) {
@@ -24322,7 +24327,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 
 
-var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
+var BASE_URL = "https://admin.ravedelivery.ru/storage/";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'MainPage',
   components: {
@@ -24511,7 +24516,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 
 
-var BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
+var BASE_URL = "https://admin.ravedelivery.ru/storage/";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'ProductPage',
   components: {
@@ -26697,7 +26702,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
-var API_URL = "https://rave-back.pisateli-studio.ru/api/v1";
+var API_URL = "https://admin.ravedelivery.ru/api/v1";
 var api = axios__WEBPACK_IMPORTED_MODULE_0___default().create({
   baseURL: API_URL,
   headers: {

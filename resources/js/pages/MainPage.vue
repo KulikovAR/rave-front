@@ -50,7 +50,7 @@ import SchedulePopUp from '../components/SchedulePopUp.vue';
 import MainBannerPopUp from '../components/MainBannerPopUp.vue';
 import { mapState, mapActions } from 'vuex';
 
-const BASE_URL = process.env.VUE_APP_RAVE_IMAGE_STORAGE_BASE;
+const BASE_URL = process.env.MIX_RAVE_IMAGE_STORAGE_BASE;
 
 export default {
     name: 'MainPage',

@@ -50,7 +50,7 @@ import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 
-const BASE_URL = process.env.VUE_APP_RAVE_IMAGE_STORAGE_BASE;
+const BASE_URL = process.env.MIX_RAVE_IMAGE_STORAGE_BASE;
 
 export default {
     name: "CategoryTabs",

@@ -30,7 +30,7 @@ import ContactsPopUp from '../components/ContactsPopUp.vue';
 import NotWorkingTimePopUp from '../components/NotWorkingTimePopUp.vue';
 import { mapState, mapActions } from 'vuex';
 
-const BASE_URL = process.env.VUE_APP_RAVE_IMAGE_STORAGE_BASE;
+const BASE_URL = process.env.MIX_RAVE_IMAGE_STORAGE_BASE;
 
 export default {
     name: 'CategoryPage',
