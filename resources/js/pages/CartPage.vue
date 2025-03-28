@@ -49,7 +49,7 @@ import RecommendedProductsSlider from '../components/RecommendedProductsSlider.v
 import EmptyCartContent from '../components/EmptyCartContent.vue';
 import NotWorkingTimePopUp from "../components/NotWorkingTimePopUp.vue";
 
-const BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
+const BASE_URL = process.env.VUE_APP_RAVE_IMAGE_STORAGE_BASE;
 
 export default {
     name: 'CartPage',

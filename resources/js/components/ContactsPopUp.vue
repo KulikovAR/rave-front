@@ -48,6 +48,8 @@
 <script>
 import { mapState } from 'vuex';
 
+const BASE_URL = process.env.VUE_APP_RAVE_IMAGE_STORAGE_BASE;
+
 export default {
     name: 'ContactsPopUp',
     props: {
@@ -119,7 +121,7 @@ export default {
             return time.slice(0, 5);
         },
         getFullImagePath(imageName) {
-            return `https://rave-back.pisateli-studio.ru/storage/${imageName}`;
+            return `${BASE_URL}${imageName}`;
         },
         
         openMap() {

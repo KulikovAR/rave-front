@@ -30,6 +30,8 @@ import ContactsPopUp from '../components/ContactsPopUp.vue';
 import NotWorkingTimePopUp from '../components/NotWorkingTimePopUp.vue';
 import { mapState, mapActions } from 'vuex';
 
+const BASE_URL = process.env.VUE_APP_RAVE_IMAGE_STORAGE_BASE;
+
 export default {
     name: 'CategoryPage',
     components: {
@@ -66,7 +68,7 @@ export default {
             this.$refs.ContactsPopUp.showPopUp();
         },
         getFullImagePath(imageName) {
-            return `https://rave-back.pisateli-studio.ru/storage/${imageName}`;
+            return `${BASE_URL}${imageName}`;
         },
         initData() {
             if (!this.restaurants.length) {

@@ -50,6 +50,8 @@ import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 
+const BASE_URL = process.env.VUE_APP_RAVE_IMAGE_STORAGE_BASE;
+
 export default {
     name: "CategoryTabs",
     props: {
@@ -87,10 +89,9 @@ export default {
 
         const currentRestaurantLogo = computed(() =>
             currentRestaurant.value.photo
-                ? `https://rave-back.pisateli-studio.ru/storage/${currentRestaurant.value.photo}`
+                ? `${BASE_URL}${currentRestaurant.value.photo}`
                 : ""
         );
-
         const currentRestaurantName = computed(() => currentRestaurant.value.name || "");
 
         const currentTab = computed(() => props.categorySlug || "categories");

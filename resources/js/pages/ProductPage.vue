@@ -35,7 +35,7 @@ import ProductItem from '../components/ProductItem.vue';
 import RecommendedProductsSlider from '../components/RecommendedProductsSlider.vue';
 import NotWorkingTimePopUp from '../components/NotWorkingTimePopUp.vue';
 
-const BASE_URL = 'https://rave-back.pisateli-studio.ru/storage/';
+const BASE_URL = process.env.VUE_APP_RAVE_IMAGE_STORAGE_BASE;
 
 export default {
     name: 'ProductPage',

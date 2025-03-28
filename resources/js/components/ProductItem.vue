@@ -43,6 +43,8 @@
 <script>
 import { mapActions } from "vuex";
 
+const BASE_URL = process.env.VUE_APP_RAVE_IMAGE_STORAGE_BASE;
+
 export default {
     name: 'ProductItem',
     props: {
@@ -88,7 +90,7 @@ export default {
         },
 
         getFullImagePath(imageName) {
-            return `https://rave-back.pisateli-studio.ru/storage/${imageName}`;
+            return `${BASE_URL}${imageName}`;
         },
         getPlaceholder() {
             return this.$restaurantPlugs[this.restaurantSlug] || '/images/plugs/default.png';
