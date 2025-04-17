@@ -153,7 +153,7 @@
                                 {{ isOrderDisabled ? `Минимальная сумма доставки - ${minDeliveryPrice}₽` : "Оформить заказ" }}
                             </div>
                             <div class="cart-order__privacy-text">
-                                Нажимая на кнопку, вы соглашаетесь с <router-link to="/privacy" class="cart-order__privacy-link">Политикой конфиденциальности</router-link>
+                                Нажимая на кнопку, вы соглашаетесь с <router-link :to="{ name: 'privacy', params: { restaurantSlug } }" class="cart-order__privacy-link">Политикой конфиденциальности</router-link>
                             </div>
                         </div>
 
@@ -182,7 +182,7 @@
                     {{ isOrderDisabled ? `Минимальная сумма доставки - ${minDeliveryPrice}₽` : "Оформить заказ" }}
                 </div>
                 <div class="cart-order__privacy-text">
-                    Нажимая на кнопку, вы соглашаетесь с <router-link to="/privacy" class="cart-order__privacy-link">Политикой конфиденциальности</router-link>
+                    Нажимая на кнопку, вы соглашаетесь с <router-link :to="{ name: 'privacy', params: { restaurantSlug } }" class="cart-order__privacy-link">Политикой конфиденциальности</router-link>
                 </div>
             </div>
 

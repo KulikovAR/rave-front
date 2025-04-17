@@ -22,7 +22,7 @@ const routes = [
   { path: '/:restaurantSlug/:categorySlug/product/:productSlug', name: 'product', component: ProductPage },
   { path: '/:restaurantSlug/cart', name: 'cart', component: CartPage },
   { path: '/:restaurantSlug/order', name: 'order', component: OrderPage },
-  { path: '/privacy', name: 'privacy', component: PrivacyPage },
+  { path: '/:restaurantSlug/privacy', name: 'privacy', component: PrivacyPage },
   { path: '/404', name: '404', component: NotFoundPage },
   { path: '/:catchAll(.*)', redirect: '/404' }
 ]

@@ -23702,8 +23702,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'PrivacyContent'
+  name: 'PrivacyContent',
+  props: {
+    restaurantSlug: String
+  },
+  computed: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapState)('restaurant', ['restaurants'])), {}, {
+    restaurant: function restaurant() {
+      var _this = this;
+      return this.restaurants.find(function (r) {
+        return r.slug === _this.restaurantSlug;
+      });
+    }
+  })
 });
 
 /***/ }),
@@ -24528,6 +24547,11 @@ __webpack_require__.r(__webpack_exports__);
     DeliveryPopUp: _components_DeliveryPopUp_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
     SchedulePopUp: _components_SchedulePopUp_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
     PrivacyContent: _components_PrivacyContent_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
+  },
+  data: function data() {
+    return {
+      restaurantSlug: this.$route.params.restaurantSlug
+    };
   },
   methods: {
     showDeliveryPopUp: function showDeliveryPopUp() {
@@ -26046,14 +26070,19 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return !$options.isOrderDisabled && $options.submitOrder();
     })
   }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.isOrderDisabled ? "\u041C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0443\u043C\u043C\u0430 \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0438 - ".concat($data.minDeliveryPrice, "\u20BD") : "Оформить заказ"), 3 /* TEXT, CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [_cache[17] || (_cache[17] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Нажимая на кнопку, вы соглашаетесь с ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
-    to: "/privacy",
+    to: {
+      name: 'privacy',
+      params: {
+        restaurantSlug: $props.restaurantSlug
+      }
+    },
     "class": "cart-order__privacy-link"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return _cache[16] || (_cache[16] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Политикой конфиденциальности")]);
     }),
     _: 1 /* STABLE */
-  })])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_EmptyCartContent, {
+  }, 8 /* PROPS */, ["to"])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_EmptyCartContent, {
     key: 1
   }))]), $options.cart.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_33, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_34, [_cache[19] || (_cache[19] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "cart-total__title"
@@ -26065,14 +26094,19 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return !$options.isOrderDisabled && $options.submitOrder();
     })
   }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.isOrderDisabled ? "\u041C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0443\u043C\u043C\u0430 \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0438 - ".concat($data.minDeliveryPrice, "\u20BD") : "Оформить заказ"), 3 /* TEXT, CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_36, [_cache[21] || (_cache[21] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Нажимая на кнопку, вы соглашаетесь с ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
-    to: "/privacy",
+    to: {
+      name: 'privacy',
+      params: {
+        restaurantSlug: $props.restaurantSlug
+      }
+    },
     "class": "cart-order__privacy-link"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return _cache[20] || (_cache[20] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Политикой конфиденциальности")]);
     }),
     _: 1 /* STABLE */
-  })])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_OrderSuccessPopUp, {
+  }, 8 /* PROPS */, ["to"])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_OrderSuccessPopUp, {
     ref: "OrderSuccessPopUp"
   }, null, 512 /* NEED_PATCH */)])]);
 }
@@ -26141,8 +26175,20 @@ __webpack_require__.r(__webpack_exports__);
 var _hoisted_1 = {
   "class": "privacy-content__wrapper"
 };
+var _hoisted_2 = {
+  "class": "container"
+};
+var _hoisted_3 = {
+  "class": "privacy-content"
+};
+var _hoisted_4 = {
+  key: 0,
+  "class": "privacy-content__text"
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, _cache[0] || (_cache[0] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"container\" data-v-7a198b08><div class=\"privacy-content\" data-v-7a198b08><div class=\"privacy-content__title\" data-v-7a198b08> ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ </div><div class=\"privacy-content__text\" data-v-7a198b08> Настоящая Политика конфиденциальности (далее-Политика) устанавливает правила использования персональных данных, получаемых от Пользователей сайта (далее-Пользователь) и администратором сайта <a class=\"privacy-content__link\" href=\"https://ravedelivery.com/\" data-v-7a198b08>https://ravedelivery.com/</a> принадлежащий Обществу с ограниченной ответственностью «ВИКТОРИЯ 2803», ИНН 9303037775, ОГРНИП1249300011806, место нахождения: 283001, ДНР, г.о. Донецк, г. Донецк, бульвар Пушкина, дом 25 (далее-Оператор). <br data-v-7a198b08>Политика применяется ко всем Пользователям сайта. Все термины и определения, встречающиеся в тексте Политики толкуются в соответствии с действующим законодательством РФ (в частности, Федеральный закон от 27.07.2006 г. №152-ФЗ «О персональных данных») <br data-v-7a198b08>Пользователи прямо соглашаются на обработку своих персональных данных, как это описано в настоящей Политике. Использование сайта означает выражение Пользователем безоговорочного согласия с Политикой и указанными условиями обработки информации. <br data-v-7a198b08>Пользователь не должен пользоваться сайтом, если Пользователь не согласен с условиями Политики. </div><div class=\"privacy-content__title\" data-v-7a198b08> 1. ПЕРСОНАЛЬНЫЕ ДАННЫЕ ПОЛЬЗОВАТЕЛЕЙ, КОТОРЫЕ ОБРАБАТЫВАЕТ ОПЕРАТОР </div><div class=\"privacy-content__text\" data-v-7a198b08> 1.1. Сайт собирает, получает и использует в определенных Политикой целях персональные данные Пользователей. <br data-v-7a198b08>1.2. Под персональными данными Пользователя понимается информация, которую пользователь предоставляет Оператору при заполнении заявки или формы обратной связи на Сайте и последующим использованием Сайта. <br data-v-7a198b08>1.3. Оператор также может обрабатывать данные, сделанные общедоступными субъектом персональных данных или подлежащие опубликованию, или обязательному раскрытию в соответствии с законодательством РФ. <br data-v-7a198b08>1.4. Оператор не проверяет достоверность персональных данных, предоставляемых Пользователем, и не имеет возможности оценивать его дееспособность. Однако Оператор исходит из того, что Пользователь предоставляет достоверную и достаточную персональную информацию о себе и поддерживает данную информацию в актуальном виде. <br data-v-7a198b08>Под персональными данными подразумевается любая информация личного характера, позволяющая установить личность Пользователя, такая как: <br data-v-7a198b08>- имя Пользователя; <br data-v-7a198b08>- контактный телефон Пользователя (а также указанный Пользователем <br data-v-7a198b08>контактный телефон получателя заказа); <br data-v-7a198b08>- адрес Пользователя, по которому осуществляется доставка заказа; </div><div class=\"privacy-content__title\" data-v-7a198b08> 2. ЦЕЛИ ОБРАБОТКИ ПЕРСОНАЛЬНЫХ ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ </div><div class=\"privacy-content__text\" data-v-7a198b08> 2.1. Главная цель Оператора при сборе персональных данных: <br data-v-7a198b08>- установления с Пользователем обратной связи, включая направление уведомлений, запросов, касающихся использования Сайта, оказания услуг; <br data-v-7a198b08>- обработку запросов и заявок от Пользователя, предоставления Пользователю эффективной клиентской и технической поддержки. </div><div class=\"privacy-content__title\" data-v-7a198b08> 3. УСЛОВИЯ И СПОСОБЫ ОБРАБОТКИ ПЕРСОНАЛЬНЫХ ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ, И ЕЕ ПЕРЕДАЧА ТРЕТЬИМ ЛИЦАМ </div><div class=\"privacy-content__text\" data-v-7a198b08> 3.1. Пользователь дает согласие на обработку своих персональных данных путем отправки заявки (любой письменный или электронный запрос, содержащий контактные данные). <br data-v-7a198b08>3.2. Обработка персональных данных Пользователя означает сбор, запись, систематизацию, накопление, хранение, уточнение (обновление, изменение), извлечение, использование, передачу, блокирование, удаление, уничтожение персональных данных Пользователя. <br data-v-7a198b08>3.3. В отношении персональной информации Пользователя сохраняется ее конфиденциальность, кроме случаев добровольного предоставления Пользователем информации о себе для общего доступа неограниченному кругу лиц. <br data-v-7a198b08>3.4 Оператор вправе передать персональную информацию Пользователя третьим лицам в следующих случаях: <br data-v-7a198b08>- Пользователь выразил согласие на такие действия; <br data-v-7a198b08>- передача необходима для исполнения определенного договора или соглашения с Пользователем, или для использования определенной услуги Сайта; <br data-v-7a198b08>- передача уполномоченным органам государственной власти Российской Федерации по основаниям и в порядке, установленным законодательством Российской Федерации. <br data-v-7a198b08>- в целях обеспечения возможности защиты прав и законных интересов Оператора или третьих лиц в случаях, когда Пользователь нарушает условия договоров и соглашений с Оператором, настоящую Политику; <br data-v-7a198b08>- в результате обработки персональной информации Пользователя путем ее обезличивания получены обезличенные статистические данные, которые передаются третьему лицу для проведения исследований, оказания услуг или выполнения работ. </div><div class=\"privacy-content__title\" data-v-7a198b08> 4. МЕРЫ, ПРИМЕНЯЕМЫЕ ДЛЯ ЗАЩИТЫ ПЕРСОНАЛЬНОЙ ИНФОРМАЦИИ ПОЛЬЗОВАТЕЛЯ </div><div class=\"privacy-content__text\" data-v-7a198b08> 4.1. Оператор принимает необходимые и достаточные правовые, организационные и технические меры для защиты персональной информации Пользователя от неправомерного или случайного доступа, уничтожения, изменения, блокирования, копирования, распространения, а также от иных неправомерных действий с ней третьих лиц. <br data-v-7a198b08>4.2.Хранение персональных данных Пользователей может осуществляться не дольше, чем этого требуют цели обработки, если иное не предусмотрено законодательством РФ. </div><div class=\"privacy-content__title\" data-v-7a198b08> 5. РАЗРЕШЕНИЕ СПОРОВ </div><div class=\"privacy-content__text\" data-v-7a198b08> 5.1. До обращения в суд с иском по спорам, возникающим из отношений между Пользователем сайта <a class=\"privacy-content__link\" href=\"https://ravedelivery.com/\" data-v-7a198b08>https://ravedelivery.com/</a> и Оператором, обязательным является предъявление претензии (письменного предложения о добровольном урегулировании спора). </div><div class=\"privacy-content__title\" data-v-7a198b08> 6. ДОПОЛНИТЕЛЬНЫЕ УСЛОВИЯ </div><div class=\"privacy-content__text\" data-v-7a198b08> 6.1.Оператор вправе вносить изменения в настоящую Политику конфиденциальности без согласия Пользователя. <br data-v-7a198b08>6.2. Новая Политика конфиденциальности вступает в силу с момента ее размещения, если иное не предусмотрено новой редакцией Политики конфиденциальности. <br data-v-7a198b08>6.3. Продолжение использования Сайта после внесения таких изменений подтверждает согласие Пользователя с такими изменениями. <br data-v-7a198b08>6.4. Все предложения, вопросы, запросы и иные обращения по поводу настоящей Политики и использования своих персональных данных Пользователь вправе направлять Сайту: <br data-v-7a198b08>6.4.1. по адресу электронной почты: rave.group@yandex.ru <br data-v-7a198b08>6.4.2. по почтовому адресу: 283001, ДНР, г.о. Донецк, г. Донецк, бульвар Пушкина, дом 25 </div></div></div>", 1)]));
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_cache[0] || (_cache[0] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "privacy-content__title"
+  }, " ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ ", -1 /* HOISTED */)), $options.restaurant ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.restaurant.privacy), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"privacy-content__text\">\r\n                    Настоящая Политика конфиденциальности (далее-Политика) устанавливает правила использования персональных данных, получаемых от Пользователей сайта (далее-Пользователь) и администратором сайта <a class=\"privacy-content__link\" href=\"https://ravedelivery.com/\">https://ravedelivery.com/</a> принадлежащий Обществу с ограниченной ответственностью «ВИКТОРИЯ 2803», ИНН 9303037775, ОГРНИП1249300011806, место нахождения: 283001, ДНР, г.о. Донецк, г. Донецк, бульвар Пушкина, дом 25 (далее-Оператор).\r\n                    <br>Политика применяется ко всем Пользователям сайта. Все термины и определения, встречающиеся в тексте Политики толкуются в соответствии с действующим законодательством РФ (в частности, Федеральный закон от 27.07.2006 г. №152-ФЗ «О персональных данных»)\r\n                    <br>Пользователи прямо соглашаются на обработку своих персональных данных, как это описано в настоящей Политике. Использование сайта означает выражение Пользователем безоговорочного согласия с Политикой и указанными условиями обработки информации.\r\n                    <br>Пользователь не должен пользоваться сайтом, если Пользователь не согласен с условиями Политики.\r\n                </div>\r\n                \r\n                <div class=\"privacy-content__title\">\r\n                    1. ПЕРСОНАЛЬНЫЕ ДАННЫЕ ПОЛЬЗОВАТЕЛЕЙ, КОТОРЫЕ ОБРАБАТЫВАЕТ ОПЕРАТОР\r\n                </div>\r\n                <div class=\"privacy-content__text\">\r\n                    1.1. Сайт собирает, получает и использует в определенных Политикой целях персональные данные Пользователей.\r\n                    <br>1.2. Под персональными данными Пользователя понимается информация, которую пользователь предоставляет Оператору при заполнении заявки или формы обратной связи на Сайте и последующим использованием Сайта.\r\n                    <br>1.3. Оператор также может обрабатывать данные, сделанные общедоступными субъектом персональных данных или подлежащие опубликованию, или обязательному раскрытию в соответствии с законодательством РФ.\r\n                    <br>1.4. Оператор не проверяет достоверность персональных данных, предоставляемых Пользователем, и не имеет возможности оценивать его дееспособность. Однако Оператор исходит из того, что Пользователь предоставляет достоверную и достаточную персональную информацию о себе и поддерживает данную информацию в актуальном виде.\r\n                    <br>Под персональными данными подразумевается любая информация личного характера, позволяющая установить личность Пользователя, такая как:\r\n                    <br>- имя Пользователя;\r\n                    <br>- контактный телефон Пользователя (а также указанный Пользователем \r\n                    <br>контактный телефон получателя заказа);\r\n                    <br>- адрес Пользователя, по которому осуществляется доставка заказа;\r\n                </div>\r\n\r\n                <div class=\"privacy-content__title\">\r\n                    2. ЦЕЛИ ОБРАБОТКИ ПЕРСОНАЛЬНЫХ ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ\r\n                </div>\r\n                <div class=\"privacy-content__text\">\r\n                    2.1. Главная цель Оператора при сборе персональных данных:\r\n                    <br>- установления с Пользователем обратной связи, включая направление уведомлений, запросов, касающихся использования Сайта, оказания услуг;\r\n                    <br>- обработку запросов и заявок от Пользователя, предоставления Пользователю эффективной клиентской и технической поддержки.\r\n                </div>\r\n                \r\n                <div class=\"privacy-content__title\">\r\n                    3. УСЛОВИЯ И СПОСОБЫ ОБРАБОТКИ ПЕРСОНАЛЬНЫХ ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ, И ЕЕ ПЕРЕДАЧА ТРЕТЬИМ ЛИЦАМ\r\n                </div>\r\n                <div class=\"privacy-content__text\">\r\n                    3.1. Пользователь дает согласие на обработку своих персональных данных путем отправки заявки (любой письменный или электронный запрос, содержащий контактные данные).\r\n                    <br>3.2. Обработка персональных данных Пользователя означает сбор, запись, систематизацию, накопление, хранение, уточнение (обновление, изменение), извлечение, использование, передачу, блокирование, удаление, уничтожение персональных данных Пользователя.\r\n                    <br>3.3. В отношении персональной информации Пользователя сохраняется ее конфиденциальность, кроме случаев добровольного предоставления Пользователем информации о себе для общего доступа неограниченному кругу лиц.\r\n                    <br>3.4 Оператор вправе передать персональную информацию Пользователя третьим лицам в следующих случаях:\r\n                    <br>- Пользователь выразил согласие на такие действия;\r\n                    <br>- передача необходима для исполнения определенного договора или соглашения с Пользователем, или для использования определенной услуги Сайта;\r\n                    <br>- передача уполномоченным органам государственной власти Российской Федерации по основаниям и в порядке, установленным законодательством Российской Федерации.\r\n                    <br>- в целях обеспечения возможности защиты прав и законных интересов Оператора или третьих лиц в случаях, когда Пользователь нарушает условия договоров и соглашений с Оператором, настоящую Политику;\r\n                    <br>- в результате обработки персональной информации Пользователя путем ее обезличивания получены обезличенные статистические данные, которые передаются третьему лицу для проведения исследований, оказания услуг или выполнения работ.\r\n                </div>\r\n                \r\n                <div class=\"privacy-content__title\">\r\n                    4. МЕРЫ, ПРИМЕНЯЕМЫЕ ДЛЯ ЗАЩИТЫ ПЕРСОНАЛЬНОЙ ИНФОРМАЦИИ ПОЛЬЗОВАТЕЛЯ\r\n                </div>\r\n                <div class=\"privacy-content__text\">\r\n                    4.1. Оператор принимает необходимые и достаточные правовые, организационные и технические меры для защиты персональной информации Пользователя от неправомерного или случайного доступа, уничтожения, изменения, блокирования, копирования, распространения, а также от иных неправомерных действий с ней третьих лиц.\r\n                    <br>4.2.Хранение персональных данных Пользователей может осуществляться не дольше, чем этого требуют цели обработки, если иное не предусмотрено законодательством РФ.\r\n                </div>\r\n                \r\n                <div class=\"privacy-content__title\">\r\n                    5. РАЗРЕШЕНИЕ СПОРОВ\r\n                </div>\r\n                <div class=\"privacy-content__text\">\r\n                    5.1. До обращения в суд с иском по спорам, возникающим из отношений между Пользователем сайта <a class=\"privacy-content__link\" href=\"https://ravedelivery.com/\">https://ravedelivery.com/</a> и Оператором, обязательным является предъявление претензии (письменного предложения о добровольном урегулировании спора).\r\n                </div>\r\n                \r\n                <div class=\"privacy-content__title\">\r\n                    6. ДОПОЛНИТЕЛЬНЫЕ УСЛОВИЯ\r\n                </div>\r\n                <div class=\"privacy-content__text\">\r\n                    6.1.Оператор вправе вносить изменения в настоящую Политику конфиденциальности без согласия Пользователя.\r\n                    <br>6.2. Новая Политика конфиденциальности вступает в силу с момента ее размещения, если иное не предусмотрено новой редакцией Политики конфиденциальности.\r\n                    <br>6.3. Продолжение использования Сайта после внесения таких изменений подтверждает согласие Пользователя с такими изменениями.\r\n                    <br>6.4. Все предложения, вопросы, запросы и иные обращения по поводу настоящей Политики и использования своих персональных данных Пользователь вправе направлять Сайту:\r\n                    <br>6.4.1. по адресу электронной почты: rave.group@yandex.ru\r\n                    <br>6.4.2. по почтовому адресу: 283001, ДНР, г.о. Донецк, г. Донецк, бульвар Пушкина, дом 25\r\n                </div> ")])])]);
 }
 
 /***/ }),
@@ -26772,7 +26818,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, null, 512 /* NEED_PATCH */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_SchedulePopUp, {
     ref: "SchedulePopUp",
     restaurants: _ctx.restaurants
-  }, null, 8 /* PROPS */, ["restaurants"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_PrivacyContent)]);
+  }, null, 8 /* PROPS */, ["restaurants"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_PrivacyContent, {
+    restaurantSlug: $data.restaurantSlug
+  }, null, 8 /* PROPS */, ["restaurantSlug"])]);
 }
 
 /***/ }),
@@ -26977,7 +27025,7 @@ var routes = [{
   name: 'order',
   component: _pages_OrderPage_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
 }, {
-  path: '/privacy',
+  path: '/:restaurantSlug/privacy',
   name: 'privacy',
   component: _pages_PrivacyPage_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
 }, {

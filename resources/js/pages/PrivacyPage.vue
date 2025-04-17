@@ -12,7 +12,7 @@
             ref="SchedulePopUp"
             :restaurants="restaurants"
         />
-        <PrivacyContent />
+        <PrivacyContent :restaurantSlug="restaurantSlug" />
     </div>
 </template>
 
@@ -29,6 +29,11 @@ export default {
         DeliveryPopUp,
         SchedulePopUp,
         PrivacyContent,
+    },
+    data() {
+        return {
+            restaurantSlug: this.$route.params.restaurantSlug
+        };
     },
     methods: {
         showDeliveryPopUp() {
