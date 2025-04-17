@@ -152,6 +152,9 @@
                             >
                                 {{ isOrderDisabled ? `Минимальная сумма доставки - ${minDeliveryPrice}₽` : "Оформить заказ" }}
                             </div>
+                            <div class="cart-order__privacy-text">
+                                Нажимая на кнопку, вы соглашаетесь с <router-link to="/privacy" class="cart-order__privacy-link">Политикой конфиденциальности</router-link>
+                            </div>
                         </div>
 
                     </div>
@@ -177,6 +180,9 @@
                     @click="!isOrderDisabled && submitOrder()"
                 >
                     {{ isOrderDisabled ? `Минимальная сумма доставки - ${minDeliveryPrice}₽` : "Оформить заказ" }}
+                </div>
+                <div class="cart-order__privacy-text">
+                    Нажимая на кнопку, вы соглашаетесь с <router-link to="/privacy" class="cart-order__privacy-link">Политикой конфиденциальности</router-link>
                 </div>
             </div>
 
@@ -792,6 +798,7 @@ textarea.order-form__input {
         color: var(--Color-White, #FFFFFC);
 
         cursor: pointer;
+        margin-bottom: 14px;
     }
 
     .cart-order-btn:hover{
@@ -929,7 +936,23 @@ textarea.order-form__input {
         height: 24px;
         margin-right: 12px;
     }
-
+    .cart-order__privacy-text{
+        font-family: Vela Sans GX;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 150%;
+        letter-spacing: 0%;
+        color: #505050;
+    }
+    .cart-order__privacy-link{
+        font-family: Vela Sans GX;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 150%;
+        letter-spacing: 0%;
+        text-decoration: none;
+        color: #000;
+    }
 </style>
 
 <style scoped>

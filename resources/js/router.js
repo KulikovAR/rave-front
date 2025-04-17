@@ -6,6 +6,7 @@ import CatalogPage from './pages/CatalogPage.vue'
 import ProductPage from './pages/ProductPage.vue'
 import CartPage from './pages/CartPage.vue'
 import OrderPage from './pages/OrderPage.vue'
+import PrivacyPage from './pages/PrivacyPage.vue'
 import NotFoundPage from './pages/NotFoundPage.vue'
 
 const routes = [
@@ -21,6 +22,7 @@ const routes = [
   { path: '/:restaurantSlug/:categorySlug/product/:productSlug', name: 'product', component: ProductPage },
   { path: '/:restaurantSlug/cart', name: 'cart', component: CartPage },
   { path: '/:restaurantSlug/order', name: 'order', component: OrderPage },
+  { path: '/privacy', name: 'privacy', component: PrivacyPage },
   { path: '/404', name: '404', component: NotFoundPage },
   { path: '/:catchAll(.*)', redirect: '/404' }
 ]
