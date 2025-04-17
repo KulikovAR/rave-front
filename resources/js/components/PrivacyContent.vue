@@ -139,8 +139,15 @@ export default {
         color: #505050;
     }
 
-    .privacy-content__text :deep(p) {
+    .privacy-content__text :deep(ol) {
         margin: 1em 0;
+        font-family: Vela Sans GX;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 145%;
+        letter-spacing: -5%;
+
+        color: #000000;
     }
 
     .privacy-content__text :deep(strong) {
