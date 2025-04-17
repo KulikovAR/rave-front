@@ -6,8 +6,7 @@
                     ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ
                 </div>
 
-                <div class="privacy-content__text" v-if="restaurant">
-                    {{ restaurant.privacy }}
+                <div class="privacy-content__text" v-if="restaurant" v-html="parsedPrivacy">
                 </div>
 
 
@@ -90,6 +89,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import { marked } from 'marked';
 
 export default {
     name: 'PrivacyContent',
@@ -100,6 +100,9 @@ export default {
         ...mapState('restaurant', ['restaurants']),
         restaurant() {
             return this.restaurants.find(r => r.slug === this.restaurantSlug);
+        },
+        parsedPrivacy() {
+            return this.restaurant ? marked(this.restaurant.privacy) : '';
         }
     }
 }
@@ -134,5 +137,18 @@ export default {
     .privacy-content__link{
         text-decoration: underline;
         color: #505050;
+    }
+
+    .privacy-content__text :deep(p) {
+        margin: 1em 0;
+    }
+
+    .privacy-content__text :deep(strong) {
+        font-weight: 500;
+    }
+
+    .privacy-content__text :deep(a) {
+        color: #505050;
+        text-decoration: underline;
     }
 </style>
