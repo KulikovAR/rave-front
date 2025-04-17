@@ -150,6 +150,26 @@ export default {
         color: #000000;
     }
 
+    .privacy-content__text :deep(li) {
+        font-family: Vela Sans GX;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 145%;
+        letter-spacing: -5%;
+
+        color: #000000;
+    }
+
+    .privacy-content__text :deep(p) {
+        font-family: Vela Sans GX;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 145%;
+        letter-spacing: -5%;
+
+        color: #505050;
+    }
+
     .privacy-content__text :deep(strong) {
         font-weight: 500;
     }
