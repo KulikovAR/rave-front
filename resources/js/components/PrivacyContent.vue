@@ -150,7 +150,7 @@ export default {
         color: #000000;
     }
 
-    .privacy-content__text :deep(li) {
+    .privacy-content__text :deep(ol li) {
         font-family: Vela Sans GX;
         font-weight: 500;
         font-size: 16px;
