@@ -36,7 +36,7 @@
                     </span>
                 </div>
                 <div class="schedule__pop-up__footer-item">
-                    Единый номер службы достваки: <br>
+                    Единый номер службы доставки: <br>
                     <span class="red-text">
                         <a href="tel:238">238</a>
                     </span>
